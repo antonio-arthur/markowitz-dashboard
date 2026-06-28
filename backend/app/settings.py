@@ -1,12 +1,10 @@
-﻿import os
+import os
 from pathlib import Path
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = os.environ.get('SECRET_KEY', 'markowitz-dev-key-2024')
-
 DEBUG = os.environ.get('DEBUG', 'True') == 'True'
-
 ALLOWED_HOSTS = ['*']
 
 INSTALLED_APPS = [
@@ -60,14 +58,9 @@ DATABASES = {
     }
 }
 
-AUTH_PASSWORD_VALIDATORS = []
-
 LANGUAGE_CODE = 'pt-br'
 TIME_ZONE = 'America/Sao_Paulo'
-USE_I18N = True
-USE_TZ = True
 
-# Static files
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, '..', 'frontend', 'static'),
@@ -75,13 +68,6 @@ STATICFILES_DIRS = [
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
-# CORS
 CORS_ALLOW_ALL_ORIGINS = True
-
-# CSRF
-CSRF_TRUSTED_ORIGINS = [
-    'https://*.onrender.com',
-    'https://*.pythonanywhere.com',
-]
-
+CSRF_TRUSTED_ORIGINS = ['https://*.railway.app']
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'

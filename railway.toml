@@ -1,0 +1,10 @@
+[build]
+rootDirectory = "backend"
+watchPatterns = ["backend/**/*.py", "backend/**/*.html", "frontend/**/*.js", "frontend/**/*.css"]
+
+[deploy]
+startCommand = "cd backend && python manage.py migrate && gunicorn app.wsgi:application --bind 0.0.0.0:"
+healthcheckPath = "/"
+
+[templates]
+python = "3.12"

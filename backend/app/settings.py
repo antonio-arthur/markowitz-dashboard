@@ -36,10 +36,7 @@ ROOT_URLCONF = 'app.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [
-            os.path.join(BASE_DIR, '..', 'frontend', 'templates'),
-            os.path.join(BASE_DIR, 'frontend', 'templates'),
-        ],
+        'DIRS': [os.path.join(BASE_DIR, '..', 'frontend', 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -67,7 +64,6 @@ TIME_ZONE = 'America/Sao_Paulo'
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, '..', 'frontend', 'static'),
-    os.path.join(BASE_DIR, 'frontend', 'static'),
 ]
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'

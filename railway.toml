@@ -7,3 +7,6 @@ healthcheckPath = "/"
 
 [deploy.preDeploy]
 command = "python manage.py migrate --noinput"
+
+[variables]
+PORT = "8000"

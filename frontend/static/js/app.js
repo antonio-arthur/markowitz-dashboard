@@ -65,23 +65,20 @@
                 var self = this;
                 self.pesos = resultado.pesos || {};
                 
-                // Métricas reais ou simuladas
                 self.metricas = {
                     retorno: resultado.retorno_esperado || 0.18,
                     volatilidade: resultado.volatilidade || 0.16,
                     sharpe: resultado.indice_sharpe || 1.2,
-                    beta: self.calcularBeta(resultado.pesos)
+                    beta: resultado.beta || self.calcularBeta(resultado.pesos)
                 };
                 
-                // Projeções com cenários
                 var ret = self.metricas.retorno;
                 var vol = self.metricas.volatilidade;
                 
                 self.projecaoPatrimonial = self.valorInvestir * Math.pow(1 + ret, self.horizonte);
                 self.projecaoOtimista = self.valorInvestir * Math.pow(1 + ret + vol, self.horizonte);
-                self.projecaoPessimista = self.valorInvestir * Math.pow(1 + ret - vol, self.horizonte);
+                self.projecaoPessimista = self.valorInvestir * Math.pow(1 + Math.max(0.01, ret - vol), self.horizonte);
                 
-                // Preços e métricas por ativo
                 self.precosAtivos = {};
                 self.metricasAtivos = {};
                 
@@ -272,7 +269,6 @@
             var vol = self.metricas.volatilidade;
             var sharpe = self.metricas.sharpe;
             
-            // Avaliação do Beta
             var textoBeta = '';
             if (beta < 0.8) {
                 textoBeta = 'A carteira é defensiva (Beta = ' + beta.toFixed(2) + '), indicando menor sensibilidade às oscilações do mercado.';
@@ -282,7 +278,6 @@
                 textoBeta = 'A carteira é agressiva (Beta = ' + beta.toFixed(2) + '), amplificando os movimentos do mercado.';
             }
             
-            // Avaliação da Volatilidade
             var textoVol = '';
             if (vol < 0.15) {
                 textoVol = 'A volatilidade é relativamente baixa (' + self.formatarPct(vol) + '), adequada para perfis conservadores e moderados.';
@@ -292,20 +287,17 @@
                 textoVol = 'A volatilidade é elevada (' + self.formatarPct(vol) + '), exigindo tolerância a oscilações significativas.';
             }
             
-            // Avaliação do Sharpe
             var textoSharpe = '';
             if (sharpe > 2) {
-                textoSharpe = 'O Índice Sharpe (' + sharpe.toFixed(2) + ') está excepcionalmente alto. Importante verificar se o período de estimação (' + self.periodoDados + ') é representativo e se não há viés de otimização na amostra.';
+                textoSharpe = 'O Índice Sharpe (' + sharpe.toFixed(2) + ') está excepcionalmente alto. Importante verificar se o período de estimação (' + self.periodoDados + ') é representativo.';
             } else if (sharpe > 1) {
-                textoSharpe = 'O Índice Sharpe (' + sharpe.toFixed(2) + ') indica boa eficiência na relação risco-retorno para o período analisado.';
+                textoSharpe = 'O Índice Sharpe (' + sharpe.toFixed(2) + ') indica boa eficiência na relação risco-retorno.';
             } else {
                 textoSharpe = 'O Índice Sharpe (' + sharpe.toFixed(2) + ') sugere que há espaço para melhorar a eficiência da carteira.';
             }
             
-            // Alerta de concentração
             var textoConc = '';
-            var maxPeso = 0;
-            var ativoMax = '';
+            var maxPeso = 0, ativoMax = '';
             Object.keys(self.pesos).forEach(function(ticker) {
                 if (self.pesos[ticker] > maxPeso) {
                     maxPeso = self.pesos[ticker];
@@ -314,18 +306,12 @@
             });
             
             if (maxPeso > 0.40) {
-                textoConc = 'Alerta: A carteira está concentrada em ' + ativoMax + ' (' + (maxPeso*100).toFixed(1) + '%). Considere limitar a exposição individual a 25-30% para melhor diversificação.';
-            } else if (maxPeso > 0.25) {
-                textoConc = 'Atenção: ' + ativoMax + ' representa ' + (maxPeso*100).toFixed(1) + '% da carteira. Verifique se este nível de concentração está alinhado à sua estratégia.';
+                textoConc = 'Alerta: A carteira está concentrada em ' + ativoMax + ' (' + (maxPeso*100).toFixed(1) + '%). Considere limitar a exposição individual.';
             } else {
-                textoConc = 'A diversificação entre ativos está adequada, sem concentração excessiva em um único ativo.';
+                textoConc = 'A diversificação entre ativos está adequada.';
             }
             
-            // Projeção com cenários
-            var textoProj = 'Projeção para ' + self.horizonte + ' anos com investimento inicial de R$ ' + self.formatarMoeda(self.valorInvestir) + ':';
-            textoProj += ' Cenário esperado: R$ ' + self.formatarMoeda(self.projecaoPatrimonial);
-            textoProj += ' | Otimista (+1 vol): R$ ' + self.formatarMoeda(self.projecaoOtimista);
-            textoProj += ' | Pessimista (-1 vol): R$ ' + self.formatarMoeda(Math.max(self.valorInvestir, self.projecaoPessimista)) + '.';
+            var textoProj = 'Projeção para ' + self.horizonte + ' anos: Esperado R$ ' + self.formatarMoeda(self.projecaoPatrimonial) + ' | Otimista R$ ' + self.formatarMoeda(self.projecaoOtimista) + ' | Pessimista R$ ' + self.formatarMoeda(Math.max(self.valorInvestir, self.projecaoPessimista)) + '.';
             
             self.recomendacao = textoBeta + ' ' + textoVol + ' ' + textoSharpe + ' ' + textoConc + ' ' + textoProj;
         },

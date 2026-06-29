@@ -1,13 +1,9 @@
 [build]
-rootDirectory = "backend"
-watchPatterns = ["backend/**/*.py", "backend/**/*.html", "frontend/**/*.js", "frontend/**/*.css"]
+rootDirectory = "."
 
 [deploy]
-startCommand = "gunicorn app.wsgi:application --bind 0.0.0.0: --timeout 120"
+startCommand = "cd backend && python manage.py migrate --noinput && gunicorn app.wsgi:application --bind 0.0.0.0:8000"
 healthcheckPath = "/"
 
 [deploy.preDeploy]
-command = "python manage.py migrate --noinput && python manage.py collectstatic --noinput"
-
-[templates]
-python = "3.12"
+command = "python manage.py migrate --noinput"

@@ -75,16 +75,30 @@ def otimizar_maximo_sharpe(retorno_medio, cov_matrix, num_ativos, taxa_livre_ris
     
     return pesos, ret, vol
 
-def calcular_fronteira_eficiente(retorno_medio, cov_matrix, num_ativos, num_pontos=500):
-    """
-    Fronteira completa de Markowitz (estilo livros).
-    Inclui pontos abaixo da minima variancia para mostrar a hiperbole completa.
-    """
+def simular_carteiras(retorno_medio, cov_matrix, num_ativos, n=30000):
+    """Gera carteiras aleatorias para visualizar o conjunto viavel"""
+    np.random.seed(42)
+    simulacoes = []
+    
+    for _ in range(n):
+        pesos = np.random.random(num_ativos)
+        pesos /= pesos.sum()
+        
+        retorno = calcular_retorno_carteira(pesos, retorno_medio)
+        risco = calcular_volatilidade(pesos, cov_matrix)
+        
+        simulacoes.append({
+            "retorno": float(retorno),
+            "volatilidade": float(risco)
+        })
+    
+    return simulacoes
+
+def calcular_fronteira_eficiente(retorno_medio, cov_matrix, num_ativos, num_pontos=200):
     limites = tuple((0, 1) for _ in range(num_ativos))
     restricoes_base = ({'type': 'eq', 'fun': lambda w: np.sum(w) - 1})
     pesos_iniciais = np.array([1/num_ativos] * num_ativos)
     
-    # Minima variancia
     resultado_min = minimize(
         lambda w: calcular_volatilidade(w, cov_matrix),
         pesos_iniciais,
@@ -97,19 +111,11 @@ def calcular_fronteira_eficiente(retorno_medio, cov_matrix, num_ativos, num_pont
         return []
     
     ret_min = float(calcular_retorno_carteira(resultado_min.x, retorno_medio))
-    vol_min = float(calcular_volatilidade(resultado_min.x, cov_matrix))
-    
-    # Retorno do ativo de menor retorno individual (para mostrar a hiperbole completa)
-    ret_min_individual = float(np.min(retorno_medio))
-    
-    # Retorno maximo = maior retorno individual
     ret_max = float(np.max(retorno_medio))
-    
-    # Gerar retornos-alvo desde o menor retorno individual ate o maior
-    retornos_alvo = np.linspace(ret_min_individual, ret_max, num_pontos)
+    retornos_alvo = np.linspace(ret_min, ret_max, num_pontos)
     
     fronteira = []
-    pesos_anteriores = np.array([1/num_ativos] * num_ativos)
+    pesos_anteriores = resultado_min.x.copy()
     
     for retorno_alvo in retornos_alvo:
         restricoes = (
@@ -128,48 +134,19 @@ def calcular_fronteira_eficiente(retorno_medio, cov_matrix, num_ativos, num_pont
         if resultado.success:
             vol = float(calcular_volatilidade(resultado.x, cov_matrix))
             ret = float(calcular_retorno_carteira(resultado.x, retorno_medio))
-            
-            fronteira.append({
-                'volatilidade': vol,
-                'retorno': ret
-            })
+            fronteira.append({'volatilidade': vol, 'retorno': ret})
             pesos_anteriores = resultado.x.copy()
     
-    # Ordenar por volatilidade
     fronteira.sort(key=lambda x: x['volatilidade'])
     
-    # Filtrar apenas parte eficiente (acima da minima variancia)
     fronteira_eficiente = []
+    max_ret = -float('inf')
     for ponto in fronteira:
-        if ponto['retorno'] >= ret_min - TOLERANCIA:
+        if ponto['retorno'] > max_ret:
+            max_ret = ponto['retorno']
             fronteira_eficiente.append(ponto)
     
-    # Remover pontos dominados
-    resultado_final = []
-    max_ret = -float('inf')
-    for ponto in fronteira_eficiente:
-        if ponto['retorno'] > max_ret + TOLERANCIA:
-            max_ret = ponto['retorno']
-            resultado_final.append(ponto)
-    
-    # Garantir que o primeiro ponto seja a minima variancia
-    if resultado_final:
-        resultado_final.insert(0, {
-            'volatilidade': vol_min,
-            'retorno': ret_min
-        })
-        # Remover duplicatas
-        visto = set()
-        unicos = []
-        for p in resultado_final:
-            key = (round(p['volatilidade'], 6), round(p['retorno'], 6))
-            if key not in visto:
-                visto.add(key)
-                unicos.append(p)
-        resultado_final = sorted(unicos, key=lambda x: x['volatilidade'])
-    
-    return resultado_final
-
+    return fronteira_eficiente
 
 def processar_dados(tickers, periodo='1y'):
     dados = yf.download(tickers, period=periodo, progress=False)
@@ -298,9 +275,13 @@ class FronteiraEficienteView(APIView):
             if num_ativos < 2:
                 return Response({'erro': 'Necessario pelo menos 2 ativos'}, status=400)
             
-            # Fronteira completa (500 pontos, desde o menor retorno individual)
-            fronteira_eficiente = calcular_fronteira_eficiente(retorno_medio, cov_matrix, num_ativos, num_pontos=500)
+            # Fronteira eficiente
+            fronteira_eficiente = calcular_fronteira_eficiente(retorno_medio, cov_matrix, num_ativos)
             
+            # Simulacoes Monte Carlo (conjunto viavel)
+            carteiras_simuladas = simular_carteiras(retorno_medio, cov_matrix, num_ativos, n=30000)
+            
+            # Ativos individuais
             ativos = []
             for i, ticker in enumerate(tickers_validos):
                 ativos.append({
@@ -312,6 +293,7 @@ class FronteiraEficienteView(APIView):
             return Response({
                 'fronteira_eficiente': fronteira_eficiente,
                 'ativos_individual': ativos,
+                'carteiras_simuladas': carteiras_simuladas,
             })
             
         except Exception as e:

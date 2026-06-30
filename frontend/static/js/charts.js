@@ -3,17 +3,69 @@
     
     renderizarFronteira: function(dadosFronteira, carteiraOtimizada) {
         
-        var traceFronteira = {
+        var traces = [];
+        
+        // 1. Conjunto viavel - Monte Carlo (area cinza mais visivel)
+        if (dadosFronteira.carteiras_simuladas && dadosFronteira.carteiras_simuladas.length > 0) {
+            traces.push({
+                x: dadosFronteira.carteiras_simuladas.map(function(c) { return c.volatilidade; }),
+                y: dadosFronteira.carteiras_simuladas.map(function(c) { return c.retorno; }),
+                type: 'scatter',
+                mode: 'markers',
+                name: 'Carteiras Simuladas',
+                marker: {
+                    size: 4,
+                    color: '#94a3b8',
+                    opacity: 0.35
+                },
+                hovertemplate: 'Vol: %{x:.2%}<br>Ret: %{y:.2%}<extra></extra>'
+            });
+        }
+        
+        // 2. Fronteira Eficiente - linha verde com marcadores
+        traces.push({
             x: dadosFronteira.fronteira_eficiente.map(function(p) { return p.volatilidade; }),
             y: dadosFronteira.fronteira_eficiente.map(function(p) { return p.retorno; }),
             type: 'scatter',
-            mode: 'lines',
+            mode: 'lines+markers',
             name: 'Fronteira Eficiente',
-            line: { color: '#22c55e', width: 5 },
-            hovertemplate: '<b>Fronteira Eficiente</b><br>Vol: %{x:.2%}<br>Ret: %{y:.2%}<extra></extra>'
-        };
+            line: { color: '#22c55e', width: 4 },
+            marker: { size: 3, color: '#22c55e' },
+            hovertemplate: '<b>Fronteira</b><br>Vol: %{x:.2%}<br>Ret: %{y:.2%}<extra></extra>'
+        });
         
-        var traceAtivos = {
+        // 3. Minima Variancia
+        if (carteiraOtimizada.min_variancia) {
+            traces.push({
+                x: [carteiraOtimizada.min_variancia.volatilidade],
+                y: [carteiraOtimizada.min_variancia.retorno],
+                type: 'scatter',
+                mode: 'markers+text',
+                name: 'Minima Variancia',
+                marker: { size: 18, color: '#facc15', symbol: 'circle', line: { color: '#eab308', width: 2 } },
+                text: ['Min Var'],
+                textposition: 'bottom right',
+                textfont: { size: 9, color: '#ffffff', family: 'Inter' },
+                hovertemplate: '<b>Minima Variancia</b><br>Vol: %{x:.2%}<br>Ret: %{y:.2%}<extra></extra>'
+            });
+        }
+        
+        // 4. Maximo Sharpe - bola vermelha
+        traces.push({
+            x: [carteiraOtimizada.volatilidade],
+            y: [carteiraOtimizada.retorno_esperado],
+            type: 'scatter',
+            mode: 'markers+text',
+            name: 'Maximo Sharpe',
+            marker: { size: 20, color: '#ef4444', symbol: 'circle', line: { color: '#ffffff', width: 3 } },
+            text: ['Max Sharpe'],
+            textposition: 'top left',
+            textfont: { size: 9, color: '#ffffff', family: 'Inter' },
+            hovertemplate: '<b>Maximo Sharpe</b><br>Vol: %{x:.2%}<br>Ret: %{y:.2%}<extra></extra>'
+        });
+        
+        // 5. Ativos Individuais
+        traces.push({
             x: dadosFronteira.ativos_individual.map(function(a) { return a.volatilidade; }),
             y: dadosFronteira.ativos_individual.map(function(a) { return a.retorno; }),
             type: 'scatter',
@@ -24,47 +76,15 @@
             textposition: 'top center',
             textfont: { size: 10, color: '#ffffff', family: 'JetBrains Mono' },
             hovertemplate: '<b>%{text}</b><br>Vol: %{x:.2%}<br>Ret: %{y:.2%}<extra></extra>'
-        };
-        
-        var traceMinVar = null;
-        if (carteiraOtimizada.min_variancia) {
-            traceMinVar = {
-                x: [carteiraOtimizada.min_variancia.volatilidade],
-                y: [carteiraOtimizada.min_variancia.retorno],
-                type: 'scatter',
-                mode: 'markers+text',
-                name: 'Minima Variancia',
-                marker: { size: 18, color: '#facc15', symbol: 'circle', line: { color: '#eab308', width: 2 } },
-                text: ['Min Variancia'],
-                textposition: 'bottom right',
-                textfont: { size: 9, color: '#ffffff', family: 'Inter' },
-                hovertemplate: '<b>Minima Variancia</b><br>Vol: %{x:.2%}<br>Ret: %{y:.2%}<extra></extra>'
-            };
-        }
-        
-        var traceMaxSharpe = {
-            x: [carteiraOtimizada.volatilidade],
-            y: [carteiraOtimizada.retorno_esperado],
-            type: 'scatter',
-            mode: 'markers+text',
-            name: 'Maximo Sharpe',
-            marker: { size: 20, color: '#ef4444', symbol: 'circle', line: { color: '#ffffff', width: 3 } },
-            text: ['Max Sharpe'],
-            textposition: 'top left',
-            textfont: { size: 9, color: '#ffffff', family: 'Inter' },
-            hovertemplate: '<b>Maximo Sharpe</b><br>Vol: %{x:.2%}<br>Ret: %{y:.2%}<br>Sharpe: ' + (carteiraOtimizada.indice_sharpe || 0).toFixed(2) + '<extra></extra>'
-        };
-        
-        var traces = [traceFronteira, traceAtivos, traceMaxSharpe];
-        if (traceMinVar) { traces.splice(2, 0, traceMinVar); }
+        });
         
         var layout = {
             paper_bgcolor: 'rgba(0,0,0,0)',
             plot_bgcolor: 'rgba(0,0,0,0)',
             font: { color: '#ffffff', family: 'Inter' },
-            title: { text: '<b>Fronteira Eficiente de Markowitz</b><br><sub>Hipérbole de Markowitz | Otimização com scipy.optimize</sub>', font: { size: 14, color: '#ffffff' } },
-            xaxis: { title: { text: '<b>Risco (Volatilidade Anual)</b>', font: { size: 12, color: '#ffffff' } }, tickformat: '.1%', tickfont: { color: '#ffffff' }, gridcolor: 'rgba(255,255,255,0.1)', zerolinecolor: 'rgba(255,255,255,0.2)', color: '#ffffff' },
-            yaxis: { title: { text: '<b>Retorno Esperado (Anual)</b>', font: { size: 12, color: '#ffffff' } }, tickformat: '.1%', tickfont: { color: '#ffffff' }, gridcolor: 'rgba(255,255,255,0.1)', zerolinecolor: 'rgba(255,255,255,0.2)', color: '#ffffff' },
+            title: { text: '<b>Conjunto Viavel e Fronteira Eficiente</b><br><sub>30.000 carteiras simuladas | Markowitz</sub>', font: { size: 14, color: '#ffffff' } },
+            xaxis: { title: { text: '<b>Risco (Volatilidade Anual)</b>', font: { size: 12, color: '#ffffff' } }, tickformat: '.1%', tickfont: { color: '#ffffff' }, gridcolor: 'rgba(255,255,255,0.1)', color: '#ffffff' },
+            yaxis: { title: { text: '<b>Retorno Esperado (Anual)</b>', font: { size: 12, color: '#ffffff' } }, tickformat: '.1%', tickfont: { color: '#ffffff' }, gridcolor: 'rgba(255,255,255,0.1)', color: '#ffffff' },
             hovermode: 'closest',
             margin: { t: 50, r: 20, b: 50, l: 60 },
             legend: { x: 0.01, y: 0.99, bgcolor: 'rgba(15, 23, 41, 0.95)', bordercolor: 'rgba(255,255,255,0.2)', font: { size: 11, color: '#ffffff' } },
@@ -74,7 +94,6 @@
         Plotly.newPlot('graficoFronteira', traces, layout, { responsive: true, displayModeBar: true, modeBarButtonsToRemove: ['lasso2d', 'select2d', 'autoScale2d'], displaylogo: false });
     },
     
-    // PIZZA - TUDO BRANCO (inclusive labels internos)
     renderizarPesos: function(pesos) {
         var ctx = document.getElementById('graficoPesos');
         if (!ctx) return;
@@ -106,47 +125,18 @@
                         labels: {
                             padding: 15,
                             usePointStyle: true,
-                            pointStyleWidth: 12,
                             color: '#ffffff',
-                            font: { 
-                                family: 'Inter', 
-                                size: 12,
-                                weight: '500'
-                            },
+                            font: { family: 'Inter', size: 12, weight: '500' },
                             generateLabels: function(chart) {
-                                var data = chart.data;
-                                var dataset = data.datasets[0];
-                                var meta = chart.getDatasetMeta(0);
-                                var total = dataset.data.reduce(function(a, b) { return a + b; }, 0);
-                                
-                                return data.labels.map(function(label, i) {
-                                    var value = dataset.data[i];
-                                    var pct = ((value / total) * 100).toFixed(1);
+                                return chart.data.labels.map(function(label, i) {
                                     return {
-                                        text: label + '  ' + pct + '%',
-                                        fillStyle: dataset.backgroundColor[i],
-                                        strokeStyle: dataset.backgroundColor[i],
+                                        text: label + '  ' + chart.data.datasets[0].data[i].toFixed(1) + '%',
+                                        fillStyle: chart.data.datasets[0].backgroundColor[i],
+                                        strokeStyle: chart.data.datasets[0].backgroundColor[i],
                                         lineWidth: 0,
-                                        hidden: false,
-                                        index: i,
-                                        fontColor: '#ffffff'
+                                        index: i
                                     };
                                 });
-                            }
-                        }
-                    },
-                    tooltip: {
-                        backgroundColor: 'rgba(15, 23, 41, 0.98)',
-                        titleColor: '#ffffff',
-                        bodyColor: '#ffffff',
-                        borderColor: 'rgba(255,255,255,0.3)',
-                        borderWidth: 1,
-                        padding: 15,
-                        titleFont: { size: 13, weight: 'bold' },
-                        bodyFont: { size: 12 },
-                        callbacks: {
-                            label: function(context) {
-                                return '  ' + context.label + ': ' + context.parsed.toFixed(2) + '%';
                             }
                         }
                     }
@@ -155,14 +145,11 @@
         });
     },
     
-    // HEATMAP
     renderizarHeatmap: function(dadosCorrelacao) {
         var tickers = dadosCorrelacao.tickers;
         var matriz = dadosCorrelacao.matriz;
         var n = tickers.length;
         var zValues = [], textValues = [];
-        var xLabels = tickers.map(function(t) { return t.replace('.SA', ''); });
-        var yLabels = tickers.map(function(t) { return t.replace('.SA', ''); });
         
         for (var i = 0; i < n; i++) {
             var linhaZ = [], linhaT = [];
@@ -175,35 +162,26 @@
             textValues.push(linhaT);
         }
         
-        var trace = {
-            z: zValues, x: xLabels, y: yLabels, type: 'heatmap',
+        Plotly.newPlot('heatmapCorrelacao', [{
+            z: zValues,
+            x: tickers.map(function(t) { return t.replace('.SA', ''); }),
+            y: tickers.map(function(t) { return t.replace('.SA', ''); }),
+            type: 'heatmap',
             zmin: -1, zmax: 1,
-            colorscale: [[0.0, '#ef4444'],[0.25, '#f87171'],[0.5, '#e2e8f0'],[0.75, '#60a5fa'],[1.0, '#3b82f6']],
+            colorscale: [[0,'#ef4444'],[0.25,'#f87171'],[0.5,'#e2e8f0'],[0.75,'#60a5fa'],[1,'#3b82f6']],
             showscale: true,
-            colorbar: {
-                title: { text: '<b>Correlação</b>', font: { color: '#ffffff', size: 11 } },
-                tickfont: { color: '#ffffff', size: 10 },
-                tickformat: '.1f',
-                tickvals: [-1, -0.5, 0, 0.5, 1],
-                ticktext: ['-1.0', '-0.5', '0.0', '0.5', '1.0'],
-                bgcolor: 'rgba(15, 23, 41, 0.9)',
-                bordercolor: 'rgba(255,255,255,0.2)'
-            },
+            colorbar: { title: { text: 'Correlacao', font: { color: '#ffffff' } }, tickfont: { color: '#ffffff' }, tickformat: '.1f' },
             text: textValues, texttemplate: '%{text}',
             textfont: { size: 11, family: 'JetBrains Mono', color: '#1e293b' },
-            hovertemplate: '<b>%{x} × %{y}</b><br>Correlação: %{z:.4f}<extra></extra>'
-        };
-        
-        Plotly.newPlot('heatmapCorrelacao', [trace], {
+            hovertemplate: '%{x} x %{y}<br>Correlacao: %{z:.2f}<extra></extra>'
+        }], {
             paper_bgcolor: 'rgba(0,0,0,0)', plot_bgcolor: 'rgba(0,0,0,0)',
-            font: { color: '#ffffff' },
-            xaxis: { side: 'top', tickfont: { size: 10, family: 'JetBrains Mono', color: '#ffffff' }, color: '#ffffff' },
-            yaxis: { tickfont: { size: 10, family: 'JetBrains Mono', color: '#ffffff' }, color: '#ffffff', autorange: 'reversed' },
+            xaxis: { side: 'top', tickfont: { color: '#ffffff' }, color: '#ffffff' },
+            yaxis: { tickfont: { color: '#ffffff' }, color: '#ffffff', autorange: 'reversed' },
             margin: { t: 50, r: 50, b: 30, l: 60 }
         }, { responsive: true, displayModeBar: false });
     },
     
-    // HISTORICO
     renderizarHistorico: function(dadosHistoricos) {
         Plotly.newPlot('graficoHistorico', [
             { x: dadosHistoricos.meses, y: dadosHistoricos.carteira, type: 'scatter', mode: 'lines', name: 'Carteira', line: { color: '#3b82f6', width: 3 } },
@@ -211,7 +189,6 @@
             { x: dadosHistoricos.meses, y: dadosHistoricos.cdi, type: 'scatter', mode: 'lines', name: 'CDI', line: { color: '#10b981', width: 2, dash: 'dot' } }
         ], {
             paper_bgcolor: 'rgba(0,0,0,0)', plot_bgcolor: 'rgba(0,0,0,0)',
-            font: { color: '#ffffff' },
             xaxis: { gridcolor: 'rgba(255,255,255,0.1)', color: '#ffffff', tickfont: { color: '#ffffff' } },
             yaxis: { title: { text: 'Base 100', font: { color: '#ffffff' } }, gridcolor: 'rgba(255,255,255,0.1)', color: '#ffffff', tickfont: { color: '#ffffff' } },
             hovermode: 'x unified',

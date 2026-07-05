@@ -268,6 +268,7 @@
 <body>
     <div
         x-data="dashboardApp()"
+        x-init="init()"
         class="flex flex-col lg:flex-row min-h-screen w-full items-start"
     >
         <!-- SIDEBAR -->
@@ -448,8 +449,62 @@
                 </div>
 
                 <div class="space-y-2">
+                    <div class="mb-3">
+                        <label class="block text-xs uppercase tracking-wide text-gray-500 mb-2">
+                            Pesquisar ação por código ou empresa
+                        </label>
+                        <input
+                            type="text"
+                            x-model.debounce.250ms="buscaAtivo"
+                            @input.debounce.300ms="buscarAcoes()"
+                            @keydown.enter.prevent="buscarAcoes()"
+                            placeholder="Ex.: petr, vale"
+                            class="w-full rounded-xl border border-gray-700 bg-gray-950/80 px-3 py-2.5 text-sm text-white shadow-sm outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20"
+                        >
+                        <button
+                            type="button"
+                            @click="buscarAcoes()"
+                            :disabled="carregandoCatalogo || buscaAtivo.trim().length < 1"
+                            class="mt-2 w-full rounded-xl border border-blue-500/30 bg-blue-500/10 px-3 py-2 text-sm font-medium text-blue-300 transition hover:bg-blue-500/20"
+                        >
+                            <span x-show="!carregandoCatalogo">Buscar</span>
+                            <span x-show="carregandoCatalogo">Buscando...</span>
+                        </button>
+
+                        <p class="mt-2 text-[11px] text-gray-500">
+                            Adicione manualmente pelo menos 2 ativos para gerar a análise.
+                        </p>
+
+                        <div
+                            x-show="sugestoesAcoes.length > 0"
+                            class="mt-2 rounded-xl border border-gray-700 bg-gray-950/95 p-2 shadow-2xl"
+                        >
+                            <template x-for="acao in sugestoesAcoes" :key="acao.ticker">
+                                <button
+                                    type="button"
+                                    @click="selecionarSugestao(acao)"
+                                    :class="acao.jaAdicionado ? 'border border-emerald-500/30 bg-emerald-500/10' : 'hover:bg-gray-800'"
+                                    class="flex w-full items-start justify-between rounded-lg px-2 py-2 text-left text-sm text-gray-200"
+                                >
+                                    <span class="flex-1">
+                                        <span class="font-semibold text-white" x-text="acao.codigo"></span>
+                                        <span class="block text-xs text-gray-400" x-text="acao.nome"></span>
+                                    </span>
+                                    <span class="ml-3 flex flex-col items-end gap-1">
+                                        <span class="text-xs text-blue-400" x-text="acao.classe"></span>
+                                        <span
+                                            class="text-[11px]"
+                                            :class="acao.jaAdicionado ? 'text-emerald-400' : 'text-gray-500'"
+                                            x-text="acao.jaAdicionado ? 'Adicionado' : 'Adicionar'"
+                                        ></span>
+                                    </span>
+                                </button>
+                            </template>
+                        </div>
+                    </div>
+
                     <template
-                        x-for="(ativo, index) in ativosDisponiveis"
+                        x-for="(ativo, index) in ativosVisiveis"
                         :key="ativo.ticker"
                     >
                         <div
@@ -1177,10 +1232,19 @@
                             📊 Performance Comparativa
                         </h3>
 
+                        <div x-show="!historicoDemonstrativo">
+                            <div
+                                id="graficoHistorico"
+                                style="height: 380px;"
+                            ></div>
+                        </div>
+
                         <div
-                            id="graficoHistorico"
-                            style="height: 380px;"
-                        ></div>
+                            x-show="historicoDemonstrativo"
+                            class="rounded-xl border border-yellow-500/20 bg-yellow-500/10 p-4 text-sm text-yellow-200"
+                        >
+                            Simulação ilustrativa — não representa desempenho histórico real.
+                        </div>
                     </div>
                 </div>
 
@@ -1287,6 +1351,9 @@
     <script src="/static/js/api.js"></script>
     <script src="/static/js/charts.js"></script>
     <script src="/static/js/app.js"></script>
+    <script>
+        window.dashboardApp = dashboardApp;
+    </script>
 </body>
 </html>
 

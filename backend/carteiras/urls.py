@@ -2,6 +2,8 @@
 from . import views
 
 urlpatterns = [
+    path('acoes/', views.AcoesDisponiveisView.as_view(), name='acoes-disponiveis'),
+    path('analisar-carteira/', views.AnalisarCarteiraView.as_view(), name='analisar'),
     path('otimizar-carteira/', views.OtimizarCarteiraView.as_view(), name='otimizar'),
     path('fronteira-eficiente/', views.FronteiraEficienteView.as_view(), name='fronteira'),
     path('info-ativos/', views.InfoAtivosView.as_view(), name='info-ativos'),

@@ -1,3 +1,10 @@
+import json
+import logging
+import os
+import unicodedata
+
+from django.conf import settings
+from django.core.cache import cache
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
@@ -8,17 +15,30 @@ import yfinance as yf
 
 from scipy.optimize import minimize
 
+from .serializers import AnaliseCarteiraSerializer
+
 
 # ============================================================
 # CONFIGURAÇÕES
 # ============================================================
 
-TAXA_LIVRE_RISCO = 0.10
+logger = logging.getLogger(__name__)
+
+TAXA_LIVRE_RISCO = float(os.environ.get("TAXA_LIVRE_RISCO", "0.10"))
+
+
+def normalizar_texto(texto):
+    """Remove acentos e converte para minúsculas."""
+    if not texto:
+        return ""
+    texto = str(texto).strip().lower()
+    return unicodedata.normalize("NFKD", texto).encode("ascii", "ignore").decode("ascii")
 BENCHMARK_PADRAO = "^BVSP"
 
 DIAS_UTEIS_ANO = 252
-MIN_OBSERVACOES = 10
+MIN_OBSERVACOES = 60
 TOLERANCIA = 1e-6
+SIMULACOES_CARTEIRAS = 5000
 
 PERFIS_VALIDOS = {
     "conservador",
@@ -741,46 +761,46 @@ def simular_carteiras(
     retorno_medio,
     cov_matrix,
     num_ativos,
-    n=30000
+    n=SIMULACOES_CARTEIRAS
 ):
     """
-    Gera carteiras aleatórias para representar
+    Gera carteiras aleatórias em lote para representar
     o conjunto viável de Markowitz.
     """
-    gerador = np.random.default_rng(
-        42
+    rng = np.random.default_rng(42)
+    pesos = rng.dirichlet(
+        np.ones(num_ativos),
+        size=n
     )
 
-    simulacoes = []
+    retornos = pesos @ np.asarray(
+        retorno_medio,
+        dtype=float
+    )
+    cov_array = np.asarray(
+        cov_matrix,
+        dtype=float
+    )
+    variancias = np.einsum(
+        "ij,jk,ik->i",
+        pesos,
+        cov_array,
+        pesos
+    )
+    volatilidades = np.sqrt(
+        np.maximum(variancias, 0)
+    )
 
-    for _ in range(n):
-        pesos = gerador.random(
-            num_ativos
-        )
-
-        pesos = (
-            pesos
-            / pesos.sum()
-        )
-
-        retorno = calcular_retorno_carteira(
-            pesos,
-            retorno_medio
-        )
-
-        volatilidade = calcular_volatilidade(
-            pesos,
-            cov_matrix
-        )
-
-        simulacoes.append({
+    return [
+        {
             "retorno": float(retorno),
-            "volatilidade": float(
-                volatilidade
-            )
-        })
-
-    return simulacoes
+            "volatilidade": float(volatilidade),
+        }
+        for retorno, volatilidade in zip(
+            retornos,
+            volatilidades
+        )
+    ]
 
 
 def calcular_fronteira_eficiente(
@@ -893,7 +913,7 @@ def processar_dados(
     """
     Baixa os preços dos ativos e calcula:
 
-    - retornos logarítmicos diários;
+    - retornos simples diários;
     - retorno médio anualizado;
     - matriz de covariância anualizada.
     """
@@ -909,6 +929,17 @@ def processar_dados(
             None,
             "Nenhum ticker informado"
         )
+
+    chave_cache = (
+        f"mercado:{periodo}:"
+        f"{'-'.join(sorted(tickers))}"
+    )
+    resultado_cache = cache.get(
+        chave_cache
+    )
+
+    if resultado_cache is not None:
+        return resultado_cache
 
     dados = yf.download(
         tickers=tickers,
@@ -969,10 +1000,7 @@ def processar_dados(
         how="all"
     )
 
-    retornos = np.log(
-        precos
-        / precos.shift(1)
-    )
+    retornos = precos.pct_change().dropna()
 
     # Usa apenas datas com retorno disponível
     # para todos os ativos selecionados.
@@ -998,13 +1026,20 @@ def processar_dados(
         retornos
     )
 
-    return (
+    resultado = (
         precos,
         retornos,
         retorno_medio,
         cov_matrix,
         tickers_validos
     )
+    cache.set(
+        chave_cache,
+        resultado,
+        timeout=900
+    )
+
+    return resultado
 
 
 # ============================================================
@@ -1071,10 +1106,11 @@ def baixar_retornos_benchmark(
     if serie_mercado.empty:
         return None
 
-    retornos_mercado = np.log(
+    retornos_mercado = (
         serie_mercado
-        / serie_mercado.shift(1)
-    ).dropna()
+        .pct_change()
+        .dropna()
+    )
 
     retornos_mercado.name = benchmark
 
@@ -1207,9 +1243,187 @@ def serializar_matriz_correlacao(
     return matriz
 
 
+def gerar_historico_comparativo(
+    pesos,
+    retornos_ativos,
+    retornos_mercado
+):
+    """
+    Gera o desempenho histórico real da carteira
+    e do Ibovespa, ambos normalizados em base 100.
+    """
+    if (
+        retornos_ativos is None
+        or retornos_ativos.empty
+        or retornos_mercado is None
+        or retornos_mercado.empty
+    ):
+        return None
+
+    pesos = np.asarray(
+        pesos,
+        dtype=float
+    )
+
+    retorno_carteira = retornos_ativos.dot(
+        pesos
+    )
+    retorno_carteira.name = "carteira"
+
+    dados = pd.concat(
+        [
+            retorno_carteira,
+            retornos_mercado.rename("ibovespa")
+        ],
+        axis=1,
+        join="inner"
+    ).dropna()
+
+    if len(dados) < MIN_OBSERVACOES:
+        return None
+
+    desempenho_carteira = (
+        1.0 + dados["carteira"]
+    ).cumprod()
+    desempenho_ibovespa = (
+        1.0 + dados["ibovespa"]
+    ).cumprod()
+
+    desempenho_carteira = (
+        desempenho_carteira
+        / desempenho_carteira.iloc[0]
+        * 100
+    )
+    desempenho_ibovespa = (
+        desempenho_ibovespa
+        / desempenho_ibovespa.iloc[0]
+        * 100
+    )
+
+    return {
+        "meses": [
+            data.strftime("%Y-%m-%d")
+            for data in dados.index
+        ],
+        "carteira": [
+            float(valor)
+            for valor in desempenho_carteira
+        ],
+        "ibovespa": [
+            float(valor)
+            for valor in desempenho_ibovespa
+        ],
+        "cdi": [],
+        "demonstrativo": False,
+    }
+
+
 # ============================================================
 # ENDPOINT DE INFORMAÇÕES DOS ATIVOS
 # ============================================================
+
+def carregar_catalogo_acoes_b3():
+    """Carrega o catálogo local de ações da B3 ou usa um fallback simples."""
+    caminho = (
+        settings.BASE_DIR
+        / "carteiras"
+        / "data"
+        / "acoes_b3.json"
+    )
+
+    try:
+        with open(caminho, "r", encoding="utf-8") as arquivo:
+            dados = json.load(arquivo)
+    except (FileNotFoundError, json.JSONDecodeError, OSError):
+        return [
+            {
+                "ticker": "PETR4.SA",
+                "codigo": "PETR4",
+                "nome": "PETROLEO BRASILEIRO S.A. PETROBRAS",
+                "classe": "PN",
+            },
+            {
+                "ticker": "VALE3.SA",
+                "codigo": "VALE3",
+                "nome": "VALE S.A.",
+                "classe": "ON",
+            },
+            {
+                "ticker": "ITUB4.SA",
+                "codigo": "ITUB4",
+                "nome": "ITAÚ UNIBANCO HOLDING S.A.",
+                "classe": "PN",
+            },
+            {
+                "ticker": "BBDC4.SA",
+                "codigo": "BBDC4",
+                "nome": "BANCO BRADESCO S.A.",
+                "classe": "PN",
+            },
+            {
+                "ticker": "WEGE3.SA",
+                "codigo": "WEGE3",
+                "nome": "WEG S.A.",
+                "classe": "ON",
+            },
+        ]
+
+    if isinstance(dados, list):
+        return dados
+
+    return []
+
+
+class AcoesDisponiveisView(APIView):
+    def get(self, request):
+        busca = (
+            request.GET
+            .get("busca", "")
+            .strip()
+            .lower()
+        )
+        limite = request.GET.get("limite", "10")
+
+        try:
+            limite = int(limite)
+        except ValueError:
+            limite = 10
+
+        limite = max(1, min(limite, 30))
+
+        acoes = carregar_catalogo_acoes_b3()
+
+        if busca:
+            busca_normalizada = normalizar_texto(busca)
+            resultados = []
+
+            for acao in acoes:
+                codigo = normalizar_texto(acao.get("codigo", ""))
+                nome = normalizar_texto(acao.get("nome", ""))
+
+                if not codigo and not nome:
+                    continue
+
+                score = 0
+                if codigo.startswith(busca_normalizada):
+                    score += 100
+                if busca_normalizada in codigo:
+                    score += 50
+                if busca_normalizada in nome:
+                    score += 20
+                if nome.startswith(busca_normalizada):
+                    score += 10
+
+                if score:
+                    resultados.append((score, acao))
+
+            resultados.sort(key=lambda item: (-item[0], item[1].get("codigo", "")))
+            acoes = [acao for _, acao in resultados[:limite]]
+        else:
+            acoes = acoes[:limite]
+
+        return Response(acoes)
+
 
 class InfoAtivosView(APIView):
     def get(self, request):
@@ -1682,6 +1896,184 @@ class OtimizarCarteiraView(APIView):
 # ============================================================
 # ENDPOINT DA FRONTEIRA EFICIENTE
 # ============================================================
+
+class AnalisarCarteiraView(APIView):
+    def post(self, request):
+        serializer = AnaliseCarteiraSerializer(data=request.data)
+        if not serializer.is_valid():
+            return Response(
+                {"erro": serializer.errors},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        dados = serializer.validated_data
+        tickers = dados['tickers']
+        periodo = dados['periodo']
+        perfil = dados['perfil']
+
+        try:
+            (
+                precos,
+                retornos,
+                retorno_medio,
+                cov_matrix,
+                tickers_validos,
+            ) = processar_dados(tickers, periodo)
+
+            if precos is None:
+                return Response(
+                    {"erro": tickers_validos or "Não foi possível processar os dados."},
+                    status=status.HTTP_400_BAD_REQUEST,
+                )
+
+            num_ativos = len(tickers_validos)
+            retornos_mercado = baixar_retornos_benchmark(precos, BENCHMARK_PADRAO)
+            correlacao = calcular_matriz_correlacao(retornos)
+            matriz_correlacao = serializar_matriz_correlacao(correlacao, tickers_validos)
+
+            if num_ativos == 1:
+                pesos = np.array([1.0])
+                retorno = float(retorno_medio.iloc[0])
+                volatilidade = float(np.sqrt(cov_matrix.iloc[0, 0]))
+                sharpe = (
+                    (retorno - TAXA_LIVRE_RISCO) / volatilidade
+                    if volatilidade > TOLERANCIA
+                    else 0.0
+                )
+                beta = calcular_beta_carteira(pesos, retornos, retornos_mercado)
+                pesos_unico = {tickers_validos[0]: 1.0}
+
+                historico = gerar_historico_comparativo(
+                    pesos=pesos,
+                    retornos_ativos=retornos,
+                    retornos_mercado=retornos_mercado,
+                )
+
+                return Response({
+                    "sucesso": True,
+                    "periodo": periodo,
+                    "perfil": perfil,
+                    "estrategia": "Ativo único",
+                    "carteira": {
+                        "pesos": pesos_unico,
+                        "retorno_esperado": retorno,
+                        "volatilidade": volatilidade,
+                        "indice_sharpe": float(sharpe),
+                        "beta": float(beta) if beta is not None else None,
+                        "benchmark": BENCHMARK_PADRAO,
+                        "tickers_validos": tickers_validos,
+                        "matriz_correlacao": matriz_correlacao,
+                    },
+                    "fronteira_eficiente": [],
+                    "carteiras_simuladas": [],
+                    "ativos": [{"ticker": ticker, "retorno": float(retorno_medio.iloc[idx]), "volatilidade": float(np.sqrt(cov_matrix.iloc[idx, idx]))} for idx, ticker in enumerate(tickers_validos)],
+                    "precos": {ticker: float(precos[ticker].iloc[-1]) for ticker in tickers_validos if not precos[ticker].empty},
+                    "historico": historico,
+                    "matriz_correlacao": matriz_correlacao,
+                    "taxa_livre_risco": TAXA_LIVRE_RISCO,
+                })
+
+            (
+                pesos_minimos,
+                retorno_minimo,
+                volatilidade_minima,
+            ) = otimizar_minima_variancia(retorno_medio, cov_matrix, num_ativos)
+            (
+                pesos_sharpe,
+                retorno_sharpe,
+                volatilidade_sharpe,
+            ) = otimizar_maximo_sharpe(retorno_medio, cov_matrix, num_ativos)
+
+            if pesos_minimos is None or pesos_sharpe is None:
+                return Response({"erro": "Falha ao calcular a otimização da carteira."}, status=status.HTTP_400_BAD_REQUEST)
+
+            carteira_perfil = selecionar_carteira_por_perfil(
+                perfil=perfil,
+                retorno_medio=retorno_medio,
+                cov_matrix=cov_matrix,
+                pesos_minimos=pesos_minimos,
+                retorno_minimo=retorno_minimo,
+                volatilidade_minima=volatilidade_minima,
+                pesos_sharpe=pesos_sharpe,
+                retorno_sharpe=retorno_sharpe,
+                volatilidade_sharpe=volatilidade_sharpe,
+            )
+            pesos_selecionados = limpar_pesos(carteira_perfil['pesos'])
+            retorno_selecionado = float(carteira_perfil['retorno'])
+            volatilidade_selecionada = float(carteira_perfil['volatilidade'])
+            sharpe_selecionado = calcular_sharpe(pesos_selecionados, retorno_medio, cov_matrix)
+            beta_selecionado = calcular_beta_carteira(pesos_selecionados, retornos, retornos_mercado)
+            sharpe_maximo = calcular_sharpe(pesos_sharpe, retorno_medio, cov_matrix)
+
+            fronteira_eficiente = calcular_fronteira_eficiente(retorno_medio, cov_matrix, num_ativos)
+            carteiras_simuladas = simular_carteiras(retorno_medio, cov_matrix, num_ativos)
+
+            precos_atuais = {ticker: float(precos[ticker].iloc[-1]) for ticker in tickers_validos if not precos[ticker].empty}
+            ativos = [
+                {
+                    'ticker': ticker,
+                    'retorno': float(retorno_medio.iloc[idx]),
+                    'volatilidade': float(np.sqrt(cov_matrix.iloc[idx, idx])),
+                }
+                for idx, ticker in enumerate(tickers_validos)
+            ]
+
+            historico = gerar_historico_comparativo(
+                pesos=pesos_selecionados,
+                retornos_ativos=retornos,
+                retornos_mercado=retornos_mercado,
+            )
+
+            if historico is None:
+                historico = {
+                    'meses': [],
+                    'carteira': [],
+                    'ibovespa': [],
+                    'cdi': [],
+                    'demonstrativo': True,
+                }
+
+            return Response({
+                'sucesso': True,
+                'periodo': periodo,
+                'perfil': perfil,
+                'estrategia': carteira_perfil['estrategia'],
+                'carteira': {
+                    'pesos': serializar_pesos(tickers_validos, pesos_selecionados),
+                    'retorno_esperado': retorno_selecionado,
+                    'volatilidade': volatilidade_selecionada,
+                    'indice_sharpe': float(sharpe_selecionado),
+                    'beta': float(beta_selecionado) if beta_selecionado is not None else None,
+                    'benchmark': BENCHMARK_PADRAO,
+                    'tickers_validos': tickers_validos,
+                    'matriz_correlacao': matriz_correlacao,
+                    'min_variancia': {
+                        'retorno': float(retorno_minimo),
+                        'volatilidade': float(volatilidade_minima),
+                        'pesos': serializar_pesos(tickers_validos, pesos_minimos),
+                    },
+                    'max_sharpe': {
+                        'retorno': float(retorno_sharpe),
+                        'volatilidade': float(volatilidade_sharpe),
+                        'indice_sharpe': float(sharpe_maximo),
+                        'pesos': serializar_pesos(tickers_validos, pesos_sharpe),
+                    },
+                },
+                'fronteira_eficiente': fronteira_eficiente,
+                'carteiras_simuladas': carteiras_simuladas,
+                'ativos': ativos,
+                'precos': precos_atuais,
+                'historico': historico,
+                'matriz_correlacao': matriz_correlacao,
+                'taxa_livre_risco': TAXA_LIVRE_RISCO,
+            })
+        except ValueError as erro:
+            logger.warning('Erro de validação na análise da carteira: %s', erro)
+            return Response({'erro': str(erro)}, status=status.HTTP_400_BAD_REQUEST)
+        except Exception as erro:
+            logger.exception('Erro inesperado na análise da carteira')
+            return Response({'erro': 'Não foi possível concluir a análise no momento.'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
 
 class FronteiraEficienteView(APIView):
     def post(self, request):

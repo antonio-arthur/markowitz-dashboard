@@ -232,7 +232,15 @@
             )
                 ? dadosFronteira
                     .ativos_individual
-                : [];
+                : (
+                    Array.isArray(
+                        dadosFronteira
+                            .ativos
+                    )
+                        ? dadosFronteira
+                            .ativos
+                        : []
+                );
 
         var simulacoes =
             simulacoesBrutas

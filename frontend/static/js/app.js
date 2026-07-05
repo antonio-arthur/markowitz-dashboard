@@ -19,43 +19,10 @@
         // ATIVOS DISPONÍVEIS
         // =====================================================
 
-        ativosDisponiveis: [
-            {
-                ticker: 'PETR4.SA',
-                nome: 'Petrobras PN',
-                selecionado: true
-            },
-            {
-                ticker: 'VALE3.SA',
-                nome: 'Vale ON',
-                selecionado: true
-            },
-            {
-                ticker: 'ITUB4.SA',
-                nome: 'Itaú Unibanco PN',
-                selecionado: true
-            },
-            {
-                ticker: 'BBDC4.SA',
-                nome: 'Bradesco PN',
-                selecionado: true
-            },
-            {
-                ticker: 'WEGE3.SA',
-                nome: 'WEG ON',
-                selecionado: true
-            },
-            {
-                ticker: 'ABEV3.SA',
-                nome: 'Ambev ON',
-                selecionado: false
-            },
-            {
-                ticker: 'RENT3.SA',
-                nome: 'Localiza ON',
-                selecionado: false
-            }
-        ],
+        ativosDisponiveis: [],
+        buscaAtivo: '',
+        sugestoesAcoes: [],
+        carregandoCatalogo: false,
 
         // =====================================================
         // ESTADO DA INTERFACE
@@ -100,6 +67,22 @@
         // PROPRIEDADES CALCULADAS
         // =====================================================
 
+        get ativosVisiveis() {
+            var vistos = new Set();
+
+            return (this.ativosDisponiveis || []).filter(function (ativo) {
+                var ticker = (ativo && ativo.ticker) || '';
+                var chave = ticker.toUpperCase();
+
+                if (!ticker || vistos.has(chave)) {
+                    return false;
+                }
+
+                vistos.add(chave);
+                return true;
+            });
+        },
+
         get ativosSelecionados() {
             return this.ativosDisponiveis
                 .filter(function (ativo) {
@@ -142,19 +125,152 @@
         // =====================================================
 
         toggleAtivo(index) {
+            var ativosVisiveis = this.ativosVisiveis || [];
+
             if (
                 index < 0 ||
-                index >= this.ativosDisponiveis.length
+                index >= ativosVisiveis.length
             ) {
                 return;
             }
 
-            this.ativosDisponiveis[
-                index
-            ].selecionado =
-                !this.ativosDisponiveis[
-                    index
-                ].selecionado;
+            var ativo = ativosVisiveis[index];
+            var alvo = (this.ativosDisponiveis || []).find(function (item) {
+                return item && item.ticker === ativo.ticker;
+            });
+
+            if (!alvo) {
+                return;
+            }
+
+            alvo.selecionado = !alvo.selecionado;
+        },
+
+        normalizarAtivos(lista) {
+            var resultado = [];
+            var vistos = new Set();
+
+            (lista || []).forEach(function (ativo) {
+                var ticker = (
+                    ativo && ativo.ticker
+                ) || '';
+
+                if (!ticker) {
+                    return;
+                }
+
+                var chave = ticker.toUpperCase();
+
+                if (vistos.has(chave)) {
+                    return;
+                }
+
+                vistos.add(chave);
+
+                resultado.push({
+                    ticker: ticker,
+                    nome: ativo.nome || ticker,
+                    selecionado: Boolean(ativo.selecionado)
+                });
+            });
+
+            return resultado;
+        },
+
+        async buscarAcoes() {
+            var termo = (this.buscaAtivo || '').trim();
+
+            if (!termo) {
+                this.sugestoesAcoes = [];
+                return;
+            }
+
+            this.carregandoCatalogo = true;
+
+            try {
+                var resposta = await fetch(
+                    '/api/acoes/?busca=' +
+                    encodeURIComponent(termo) +
+                    '&limite=8'
+                );
+
+                if (!resposta.ok) {
+                    throw new Error('Falha ao carregar o catálogo');
+                }
+
+                var dados = await resposta.json();
+                var listaAcoes = Array.isArray(dados)
+                    ? dados
+                    : (dados && Array.isArray(dados.resultados)
+                        ? dados.resultados
+                        : []);
+                var self = this;
+
+                this.sugestoesAcoes = listaAcoes.map(function (acao) {
+                    var jaAdicionado = (self.ativosDisponiveis || []).some(function (item) {
+                        return item && item.ticker === acao.ticker;
+                    });
+
+                    return {
+                        ticker: acao.ticker,
+                        codigo: acao.codigo,
+                        nome: acao.nome,
+                        classe: acao.classe,
+                        jaAdicionado: jaAdicionado,
+                        texto: acao.codigo + ' — ' + acao.nome + ' — ' + acao.classe,
+                    };
+                });
+                this.erro = '';
+            } catch (error) {
+                this.sugestoesAcoes = [];
+                this.erro = 'Não foi possível buscar ações no catálogo da B3.';
+            } finally {
+                this.carregandoCatalogo = false;
+            }
+        },
+
+        selecionarSugestao(acao) {
+            var jaExiste = (this.ativosDisponiveis || []).some(function (item) {
+                return item && item.ticker === acao.ticker;
+            });
+
+            if (!jaExiste) {
+                if ((this.ativosDisponiveis || []).length >= 15) {
+                    this.erro = 'Selecione no máximo 15 ações.';
+                    this.sugestoesAcoes = [];
+                    return;
+                }
+
+                this.ativosDisponiveis = this.normalizarAtivos(
+                    (this.ativosDisponiveis || []).concat([{
+                        ticker: acao.ticker,
+                        nome: acao.nome + ' — ' + acao.classe,
+                        selecionado: true
+                    }])
+                );
+            } else {
+                var alvo = (this.ativosDisponiveis || []).find(function (item) {
+                    return item && item.ticker === acao.ticker;
+                });
+
+                if (alvo) {
+                    alvo.selecionado = true;
+                }
+            }
+
+            this.erro = '';
+            this.buscaAtivo = '';
+            this.sugestoesAcoes = [];
+        },
+
+        carregarAcoesIniciais() {
+            this.ativosDisponiveis = [];
+            this.buscaAtivo = '';
+            this.sugestoesAcoes = [];
+        },
+
+        init() {
+            this.carregarAcoesIniciais();
         },
 
         // =====================================================
@@ -373,61 +489,42 @@
             );
 
             try {
-                /*
-                 * O perfil é enviado nos dois endpoints.
-                 */
-                var respostas =
-                    await Promise.all([
-                        APIService.otimizarCarteira(
-                            selecionados,
-                            periodo,
-                            perfilAtual
-                        ),
+                var analise =
+                    await APIService.analisarCarteira(
+                        selecionados,
+                        periodo,
+                        perfilAtual
+                    );
 
-                        APIService.calcularFronteira(
-                            selecionados,
-                            periodo,
-                            perfilAtual
-                        )
-                    ]);
-
-                var resultado =
-                    respostas[0];
-
-                var fronteira =
-                    respostas[1];
-
-                this.validarResultadoOtimizacao(
-                    resultado
-                );
-
-                this.validarResultadoFronteira(
-                    fronteira
+                this.validarResultadoAnalise(
+                    analise
                 );
 
                 this.processarMetricasCarteira(
-                    resultado,
+                    analise.carteira || analise,
                     selecionados
                 );
 
                 this.processarMetricasAtivos(
-                    fronteira,
+                    analise,
                     selecionados
                 );
 
                 this.processarCorrelacaoReal(
-                    resultado,
+                    analise,
                     selecionados
                 );
 
                 this.calcularProjecoes();
 
-                await this.carregarPrecosAtivos(
-                    selecionados
-                );
+                this.precosAtivos =
+                    analise.precos &&
+                    typeof analise.precos === 'object'
+                        ? analise.precos
+                        : {};
 
                 this.processarHistorico(
-                    resultado
+                    analise
                 );
 
                 this.gerarRecomendacao();
@@ -452,8 +549,8 @@
                  */
                 setTimeout(() => {
                     this.renderizarGraficos(
-                        resultado,
-                        fronteira,
+                        analise.carteira || analise,
+                        analise,
                         dadosCorrelacao,
                         dadosHistoricos
                     );
@@ -479,7 +576,7 @@
         // VALIDAÇÕES
         // =====================================================
 
-        validarResultadoOtimizacao(
+        validarResultadoAnalise(
             resultado
         ) {
             if (
@@ -487,7 +584,7 @@
                 typeof resultado !== 'object'
             ) {
                 throw new Error(
-                    'A API de otimização retornou uma resposta inválida.'
+                    'A API retornou uma resposta inválida.'
                 );
             }
 
@@ -496,29 +593,29 @@
             ) {
                 throw new Error(
                     resultado.erro ||
-                    'A otimização não foi concluída.'
+                    'A análise não foi concluída.'
                 );
             }
 
             if (
-                !resultado.pesos ||
-                typeof resultado.pesos !== 'object'
+                !resultado.carteira ||
+                typeof resultado.carteira !== 'object'
             ) {
                 throw new Error(
-                    'A API não retornou os pesos da carteira.'
+                    'A API não retornou a carteira analisada.'
                 );
             }
 
             var retorno = Number(
-                resultado.retorno_esperado
+                resultado.carteira.retorno_esperado
             );
 
             var volatilidade = Number(
-                resultado.volatilidade
+                resultado.carteira.volatilidade
             );
 
             var sharpe = Number(
-                resultado.indice_sharpe
+                resultado.carteira.indice_sharpe
             );
 
             if (!Number.isFinite(retorno)) {
@@ -541,50 +638,9 @@
                     'O Índice de Sharpe retornado pela API é inválido.'
                 );
             }
-        },
 
-        validarResultadoFronteira(
-            fronteira
-        ) {
-            if (
-                !fronteira ||
-                typeof fronteira !== 'object'
-            ) {
-                throw new Error(
-                    'A API da fronteira retornou uma resposta inválida.'
-                );
-            }
-
-            if (
-                !Array.isArray(
-                    fronteira.fronteira_eficiente
-                ) ||
-                fronteira
-                    .fronteira_eficiente
-                    .length === 0
-            ) {
-                throw new Error(
-                    'A API não retornou pontos para a fronteira eficiente.'
-                );
-            }
-
-            if (
-                !Array.isArray(
-                    fronteira.ativos_individual
-                )
-            ) {
-                throw new Error(
-                    'A API não retornou os ativos individuais.'
-                );
-            }
-
-            if (
-                !Array.isArray(
-                    fronteira.carteiras_simuladas
-                )
-            ) {
-                fronteira
-                    .carteiras_simuladas = [];
+            if (resultado.taxa_livre_risco !== undefined) {
+                this.taxaLivreRisco = Number(resultado.taxa_livre_risco) || this.taxaLivreRisco;
             }
         },
 
@@ -603,6 +659,7 @@
                     var peso = 0;
 
                     if (
+                        resultado &&
                         resultado.pesos &&
                         resultado.pesos[
                             ticker
@@ -701,9 +758,22 @@
         ) {
             this.metricasAtivos = {};
 
-            fronteira
-                .ativos_individual
-                .forEach((ativo) => {
+            var ativos =
+                Array.isArray(
+                    fronteira &&
+                    fronteira.ativos_individual
+                )
+                    ? fronteira.ativos_individual
+                    : (
+                        Array.isArray(
+                            fronteira &&
+                            fronteira.ativos
+                        )
+                            ? fronteira.ativos
+                            : []
+                    );
+
+            ativos.forEach((ativo) => {
                     var ticker =
                         String(
                             ativo.ticker
@@ -774,14 +844,26 @@
             selecionados
         ) {
             var matriz =
-                resultado.matriz_correlacao;
+                resultado &&
+                resultado.matriz_correlacao
+                    ? resultado.matriz_correlacao
+                    : (resultado &&
+                        resultado.carteira &&
+                        resultado.carteira.matriz_correlacao
+                        ? resultado.carteira.matriz_correlacao
+                        : null);
 
             var tickersValidos =
                 Array.isArray(
+                    resultado &&
                     resultado.tickers_validos
                 )
                     ? resultado.tickers_validos
-                    : selecionados;
+                    : (resultado &&
+                        resultado.carteira &&
+                        Array.isArray(resultado.carteira.tickers_validos)
+                        ? resultado.carteira.tickers_validos
+                        : selecionados);
 
             if (
                 !matriz ||
@@ -874,7 +956,9 @@
 
         processarHistorico(resultado) {
             if (
+                resultado &&
                 resultado.historico &&
+                typeof resultado.historico === 'object' &&
                 Array.isArray(
                     resultado.historico.meses
                 ) &&
@@ -883,7 +967,10 @@
                 ) &&
                 Array.isArray(
                     resultado.historico.ibovespa
-                )
+                ) &&
+                resultado.historico.meses.length > 3 &&
+                resultado.historico.carteira.length > 3 &&
+                resultado.historico.ibovespa.length > 3
             ) {
                 this.historico =
                     resultado.historico;
@@ -894,122 +981,31 @@
                 return;
             }
 
-            /*
-             * O views.py atual ainda não devolve
-             * uma série histórica real.
-             */
-            this.historico =
-                this.gerarHistoricoDemonstrativo();
-
+            this.historico = null;
             this.historicoDemonstrativo =
-                true;
-        },
-
-        gerarHistoricoDemonstrativo() {
-            var meses = [
-                'Jan/25',
-                'Fev/25',
-                'Mar/25',
-                'Abr/25',
-                'Mai/25',
-                'Jun/25',
-                'Jul/25',
-                'Ago/25',
-                'Set/25',
-                'Out/25',
-                'Nov/25',
-                'Dez/25',
-                'Jan/26',
-                'Fev/26',
-                'Mar/26',
-                'Abr/26',
-                'Mai/26',
-                'Jun/26'
-            ];
-
-            var carteira = [100];
-            var ibovespa = [100];
-            var cdi = [100];
-
-            var multiplicadorPerfil = {
-                conservador: 0.75,
-                moderado: 1.00,
-                arrojado: 1.25
-            };
-
-            var multiplicador =
-                multiplicadorPerfil[
-                    this.perfil
-                ] || 1;
-
-            for (
-                var i = 1;
-                i < meses.length;
-                i++
-            ) {
-                var retornoCarteira =
-                    (
-                        0.009 +
-                        Math.sin(
-                            i * 0.85
-                        ) *
-                        0.022
-                    ) *
-                    multiplicador;
-
-                var retornoIbovespa =
-                    0.007 +
-                    Math.sin(
-                        i * 0.70 +
-                        0.5
-                    ) *
-                    0.028;
-
-                var retornoCdi =
-                    0.008;
-
-                carteira.push(
-                    carteira[
-                        i - 1
-                    ] *
-                    (
-                        1 +
-                        retornoCarteira
-                    )
-                );
-
-                ibovespa.push(
-                    ibovespa[
-                        i - 1
-                    ] *
-                    (
-                        1 +
-                        retornoIbovespa
-                    )
-                );
-
-                cdi.push(
-                    cdi[
-                        i - 1
-                    ] *
-                    (
-                        1 +
-                        retornoCdi
-                    )
-                );
-            }
-
-            return {
-                meses: meses,
-                carteira: carteira,
-                ibovespa: ibovespa,
-                cdi: cdi
-            };
+                false;
         },
 
         // =====================================================
         // PROJEÇÕES
         // =====================================================
+
+        percentil(array, percentil) {
+            if (!Array.isArray(array) || array.length === 0) {
+                return 0;
+            }
+
+            var valores = array.slice().sort(function (a, b) {
+                return a - b;
+            });
+
+            var indice = Math.max(0, Math.min(
+                valores.length - 1,
+                Math.floor(percentil / 100 * valores.length)
+            ));
+
+            return valores[indice];
+        },
 
         calcularProjecoes() {
             var valorInicial =
@@ -1032,46 +1028,40 @@
                     this.metricas.volatilidade
                 ) || 0;
 
-            var retornoEsperado =
-                Math.max(
-                    -0.99,
-                    retorno
-                );
+            var numeroTrajetorias = 8000;
+            var patrimonios = [];
 
-            var retornoOtimista =
-                Math.max(
-                    -0.99,
-                    retorno +
-                    volatilidade
-                );
+            for (var i = 0; i < numeroTrajetorias; i++) {
+                var patrimonio = valorInicial;
 
-            var retornoPessimista =
-                Math.max(
-                    -0.99,
-                    retorno -
-                    volatilidade
-                );
+                for (var ano = 0; ano < horizonte; ano++) {
+                    var retornoAnual = Math.max(
+                        -0.99,
+                        retorno +
+                        (Math.random() * 2 - 1) *
+                        volatilidade
+                    );
 
-            this.projecaoPatrimonial =
-                valorInicial *
-                Math.pow(
-                    1 + retornoEsperado,
-                    horizonte
-                );
+                    patrimonio *= 1 + retornoAnual;
+                }
 
-            this.projecaoOtimista =
-                valorInicial *
-                Math.pow(
-                    1 + retornoOtimista,
-                    horizonte
-                );
+                patrimonios.push(patrimonio);
+            }
 
-            this.projecaoPessimista =
-                valorInicial *
-                Math.pow(
-                    1 + retornoPessimista,
-                    horizonte
-                );
+            this.projecaoPessimista = this.percentil(
+                patrimonios,
+                10
+            );
+
+            this.projecaoPatrimonial = this.percentil(
+                patrimonios,
+                50
+            );
+
+            this.projecaoOtimista = this.percentil(
+                patrimonios,
+                90
+            );
         },
 
         // =====================================================
@@ -1419,9 +1409,16 @@
                 '.';
 
             var textoHistorico =
-                this.historicoDemonstrativo
-                    ? 'O gráfico de performance comparativa ainda é demonstrativo.'
-                    : 'O gráfico de performance utiliza a série histórica retornada pelo backend.';
+                this.historico
+                    ? (
+                        'O gráfico apresenta o desempenho ' +
+                        'histórico reconstruído da carteira ' +
+                        'e do Ibovespa.'
+                    )
+                    : (
+                        'Não foi possível gerar a comparação ' +
+                        'histórica para o período selecionado.'
+                    );
 
             this.recomendacao = [
                 textoPerfil,

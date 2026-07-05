@@ -1,0 +1,2216 @@
+[
+  {
+    "ticker": "AALR3.SA",
+    "codigo": "AALR3",
+    "nome": "ALLIANÇA SAÚDE E PARTICIPAÇÕES S.A.",
+    "classe": "ON"
+  },
+  {
+    "ticker": "ABCB4.SA",
+    "codigo": "ABCB4",
+    "nome": "BCO ABC BRASIL S.A.",
+    "classe": "PN"
+  },
+  {
+    "ticker": "ABEV3.SA",
+    "codigo": "ABEV3",
+    "nome": "AMBEV S.A.",
+    "classe": "ON"
+  },
+  {
+    "ticker": "AERI3.SA",
+    "codigo": "AERI3",
+    "nome": "AERIS IND. E COM. DE EQUIP. GERACAO DE ENERGIA S/A",
+    "classe": "ON"
+  },
+  {
+    "ticker": "AFLT3.SA",
+    "codigo": "AFLT3",
+    "nome": "AFLUENTE TRANSMISSÃO DE ENERGIA ELÉTRICA S/A",
+    "classe": "ON"
+  },
+  {
+    "ticker": "AGRO3.SA",
+    "codigo": "AGRO3",
+    "nome": "BRASILAGRO - CIA BRAS DE PROP AGRICOLAS",
+    "classe": "ON"
+  },
+  {
+    "ticker": "AGXY3.SA",
+    "codigo": "AGXY3",
+    "nome": "AGROGALAXY PARTICIPAÇÕES S.A.",
+    "classe": "ON"
+  },
+  {
+    "ticker": "AHEB3.SA",
+    "codigo": "AHEB3",
+    "nome": "SAO PAULO TURISMO S.A.",
+    "classe": "ON"
+  },
+  {
+    "ticker": "ALLD3.SA",
+    "codigo": "ALLD3",
+    "nome": "ALLIED TECNOLOGIA S.A.",
+    "classe": "ON"
+  },
+  {
+    "ticker": "ALOS3.SA",
+    "codigo": "ALOS3",
+    "nome": "ALLOS S.A",
+    "classe": "ON"
+  },
+  {
+    "ticker": "ALPA3.SA",
+    "codigo": "ALPA3",
+    "nome": "ALPARGATAS S.A.",
+    "classe": "ON"
+  },
+  {
+    "ticker": "ALPA4.SA",
+    "codigo": "ALPA4",
+    "nome": "ALPARGATAS S.A.",
+    "classe": "PN"
+  },
+  {
+    "ticker": "ALPK3.SA",
+    "codigo": "ALPK3",
+    "nome": "ALLPARK EMPREENDIMENTOS PARTICIPACOES SERVICOS S.A",
+    "classe": "ON"
+  },
+  {
+    "ticker": "ALUP3.SA",
+    "codigo": "ALUP3",
+    "nome": "ALUPAR INVESTIMENTO S/A",
+    "classe": "ON"
+  },
+  {
+    "ticker": "ALUP4.SA",
+    "codigo": "ALUP4",
+    "nome": "ALUPAR INVESTIMENTO S/A",
+    "classe": "PN"
+  },
+  {
+    "ticker": "AMAR3.SA",
+    "codigo": "AMAR3",
+    "nome": "MARISA LOJAS S.A.",
+    "classe": "ON"
+  },
+  {
+    "ticker": "AMBP3.SA",
+    "codigo": "AMBP3",
+    "nome": "AMBIPAR PARTICIPACOES E EMPREENDIMENTOS S/A",
+    "classe": "ON"
+  },
+  {
+    "ticker": "AMER3.SA",
+    "codigo": "AMER3",
+    "nome": "AMERICANAS S.A",
+    "classe": "ON"
+  },
+  {
+    "ticker": "AMOB3.SA",
+    "codigo": "AMOB3",
+    "nome": "AUTOMOB PARTICIPAÇÕES S.A.",
+    "classe": "ON"
+  },
+  {
+    "ticker": "ANIM3.SA",
+    "codigo": "ANIM3",
+    "nome": "ANIMA HOLDING S.A.",
+    "classe": "ON"
+  },
+  {
+    "ticker": "ARML3.SA",
+    "codigo": "ARML3",
+    "nome": "ARMAC LOCAÇÃO. LOGÍSTICA E SERVIÇOS S.A.",
+    "classe": "ON"
+  },
+  {
+    "ticker": "ARND3.SA",
+    "codigo": "ARND3",
+    "nome": "ARND3",
+    "classe": "ON"
+  },
+  {
+    "ticker": "ASAI3.SA",
+    "codigo": "ASAI3",
+    "nome": "SENDAS DISTRIBUIDORA S.A.",
+    "classe": "ON"
+  },
+  {
+    "ticker": "ATED3.SA",
+    "codigo": "ATED3",
+    "nome": "ATOM EDUCAÇÃO E EDITORA S.A.",
+    "classe": "ON"
+  },
+  {
+    "ticker": "AUAU3.SA",
+    "codigo": "AUAU3",
+    "nome": "UNIÃO PET PARTICIPAÇÕES S.A.",
+    "classe": "ON"
+  },
+  {
+    "ticker": "AURE3.SA",
+    "codigo": "AURE3",
+    "nome": "AUREN ENERGIA S.A.",
+    "classe": "ON"
+  },
+  {
+    "ticker": "AVLL3.SA",
+    "codigo": "AVLL3",
+    "nome": "ALPHAVILLE S.A.",
+    "classe": "ON"
+  },
+  {
+    "ticker": "AXIA3.SA",
+    "codigo": "AXIA3",
+    "nome": "AXIA3",
+    "classe": "ON"
+  },
+  {
+    "ticker": "AXIA7.SA",
+    "codigo": "AXIA7",
+    "nome": "AXIA7",
+    "classe": "PNC"
+  },
+  {
+    "ticker": "AZEV3.SA",
+    "codigo": "AZEV3",
+    "nome": "AZEVEDO E TRAVASSOS S.A.",
+    "classe": "ON"
+  },
+  {
+    "ticker": "AZEV4.SA",
+    "codigo": "AZEV4",
+    "nome": "AZEVEDO E TRAVASSOS S.A.",
+    "classe": "PN"
+  },
+  {
+    "ticker": "AZTE3.SA",
+    "codigo": "AZTE3",
+    "nome": "AZEVEDO & TRAVASSOS ENERGIA S.A.",
+    "classe": "ON"
+  },
+  {
+    "ticker": "AZUL3.SA",
+    "codigo": "AZUL3",
+    "nome": "AZUL S.A.",
+    "classe": "ON"
+  },
+  {
+    "ticker": "AZZA3.SA",
+    "codigo": "AZZA3",
+    "nome": "AZZAS 2154 S.A.",
+    "classe": "ON"
+  },
+  {
+    "ticker": "B3SA3.SA",
+    "codigo": "B3SA3",
+    "nome": "B3 S.A. - BRASIL. BOLSA. BALCÃO",
+    "classe": "ON"
+  },
+  {
+    "ticker": "BALM3.SA",
+    "codigo": "BALM3",
+    "nome": "BAUMER S.A.",
+    "classe": "ON"
+  },
+  {
+    "ticker": "BALM4.SA",
+    "codigo": "BALM4",
+    "nome": "BAUMER S.A.",
+    "classe": "PN"
+  },
+  {
+    "ticker": "BAZA3.SA",
+    "codigo": "BAZA3",
+    "nome": "BCO AMAZONIA S.A.",
+    "classe": "ON"
+  },
+  {
+    "ticker": "BBAS3.SA",
+    "codigo": "BBAS3",
+    "nome": "BCO BRASIL S.A.",
+    "classe": "ON"
+  },
+  {
+    "ticker": "BBDC3.SA",
+    "codigo": "BBDC3",
+    "nome": "BCO BRADESCO S.A.",
+    "classe": "ON"
+  },
+  {
+    "ticker": "BBDC4.SA",
+    "codigo": "BBDC4",
+    "nome": "BCO BRADESCO S.A.",
+    "classe": "PN"
+  },
+  {
+    "ticker": "BBSE3.SA",
+    "codigo": "BBSE3",
+    "nome": "BB SEGURIDADE PARTICIPAÇÕES S.A.",
+    "classe": "ON"
+  },
+  {
+    "ticker": "BDLL3.SA",
+    "codigo": "BDLL3",
+    "nome": "BARDELLA S.A. INDUSTRIAS MECANICAS",
+    "classe": "ON"
+  },
+  {
+    "ticker": "BDLL4.SA",
+    "codigo": "BDLL4",
+    "nome": "BARDELLA S.A. INDUSTRIAS MECANICAS",
+    "classe": "PN"
+  },
+  {
+    "ticker": "BEEF3.SA",
+    "codigo": "BEEF3",
+    "nome": "MINERVA S.A.",
+    "classe": "ON"
+  },
+  {
+    "ticker": "BEES3.SA",
+    "codigo": "BEES3",
+    "nome": "BANESTES S.A. - BCO EST ESPIRITO SANTO",
+    "classe": "ON"
+  },
+  {
+    "ticker": "BEES4.SA",
+    "codigo": "BEES4",
+    "nome": "BANESTES S.A. - BCO EST ESPIRITO SANTO",
+    "classe": "PN"
+  },
+  {
+    "ticker": "BGIP3.SA",
+    "codigo": "BGIP3",
+    "nome": "BCO ESTADO DE SERGIPE S.A. - BANESE",
+    "classe": "ON"
+  },
+  {
+    "ticker": "BGIP4.SA",
+    "codigo": "BGIP4",
+    "nome": "BCO ESTADO DE SERGIPE S.A. - BANESE",
+    "classe": "PN"
+  },
+  {
+    "ticker": "BHIA3.SA",
+    "codigo": "BHIA3",
+    "nome": "GRUPO CASAS BAHIA S.A.",
+    "classe": "ON"
+  },
+  {
+    "ticker": "BIED3.SA",
+    "codigo": "BIED3",
+    "nome": "BIOMA EDUCAÇÃO S.A.",
+    "classe": "ON"
+  },
+  {
+    "ticker": "BIOM3.SA",
+    "codigo": "BIOM3",
+    "nome": "BIOMM S.A.",
+    "classe": "ON"
+  },
+  {
+    "ticker": "BLAU3.SA",
+    "codigo": "BLAU3",
+    "nome": "BLAU FARMACÊUTICA S.A.",
+    "classe": "ON"
+  },
+  {
+    "ticker": "BMEB3.SA",
+    "codigo": "BMEB3",
+    "nome": "BCO MERCANTIL DO BRASIL S.A.",
+    "classe": "ON"
+  },
+  {
+    "ticker": "BMEB4.SA",
+    "codigo": "BMEB4",
+    "nome": "BCO MERCANTIL DO BRASIL S.A.",
+    "classe": "PN"
+  },
+  {
+    "ticker": "BMGB4.SA",
+    "codigo": "BMGB4",
+    "nome": "BANCO BMG S.A.",
+    "classe": "PN"
+  },
+  {
+    "ticker": "BMIN3.SA",
+    "codigo": "BMIN3",
+    "nome": "BCO MERCANTIL DE INVESTIMENTOS S.A.",
+    "classe": "ON"
+  },
+  {
+    "ticker": "BMIN4.SA",
+    "codigo": "BMIN4",
+    "nome": "BCO MERCANTIL DE INVESTIMENTOS S.A.",
+    "classe": "PN"
+  },
+  {
+    "ticker": "BMKS3.SA",
+    "codigo": "BMKS3",
+    "nome": "BICICLETAS MONARK S.A.",
+    "classe": "ON"
+  },
+  {
+    "ticker": "BMOB3.SA",
+    "codigo": "BMOB3",
+    "nome": "BEMOBI MOBILE TECH S.A.",
+    "classe": "ON"
+  },
+  {
+    "ticker": "BNBR3.SA",
+    "codigo": "BNBR3",
+    "nome": "BCO NORDESTE DO BRASIL S.A.",
+    "classe": "ON"
+  },
+  {
+    "ticker": "BOBR4.SA",
+    "codigo": "BOBR4",
+    "nome": "BOMBRIL S.A.",
+    "classe": "PN"
+  },
+  {
+    "ticker": "BPAC3.SA",
+    "codigo": "BPAC3",
+    "nome": "BCO BTG PACTUAL S.A.",
+    "classe": "ON"
+  },
+  {
+    "ticker": "BPAC5.SA",
+    "codigo": "BPAC5",
+    "nome": "BCO BTG PACTUAL S.A.",
+    "classe": "PNA"
+  },
+  {
+    "ticker": "BRAP3.SA",
+    "codigo": "BRAP3",
+    "nome": "BRADESPAR S.A.",
+    "classe": "ON"
+  },
+  {
+    "ticker": "BRAP4.SA",
+    "codigo": "BRAP4",
+    "nome": "BRADESPAR S.A.",
+    "classe": "PN"
+  },
+  {
+    "ticker": "BRAV3.SA",
+    "codigo": "BRAV3",
+    "nome": "BRAVA ENERGIA S.A.",
+    "classe": "ON"
+  },
+  {
+    "ticker": "BRKM3.SA",
+    "codigo": "BRKM3",
+    "nome": "BRASKEM S.A.",
+    "classe": "ON"
+  },
+  {
+    "ticker": "BRKM5.SA",
+    "codigo": "BRKM5",
+    "nome": "BRASKEM S.A.",
+    "classe": "PNA"
+  },
+  {
+    "ticker": "BRKM6.SA",
+    "codigo": "BRKM6",
+    "nome": "BRASKEM S.A.",
+    "classe": "PNB"
+  },
+  {
+    "ticker": "BRSR3.SA",
+    "codigo": "BRSR3",
+    "nome": "BCO ESTADO DO RIO GRANDE DO SUL S.A.",
+    "classe": "ON"
+  },
+  {
+    "ticker": "BRSR5.SA",
+    "codigo": "BRSR5",
+    "nome": "BCO ESTADO DO RIO GRANDE DO SUL S.A.",
+    "classe": "PNA"
+  },
+  {
+    "ticker": "BRSR6.SA",
+    "codigo": "BRSR6",
+    "nome": "BCO ESTADO DO RIO GRANDE DO SUL S.A.",
+    "classe": "PNB"
+  },
+  {
+    "ticker": "BRST3.SA",
+    "codigo": "BRST3",
+    "nome": "BRISANET SERVIÇOS DE TELECOMUNICAÇÕES S.A.",
+    "classe": "ON"
+  },
+  {
+    "ticker": "BSLI3.SA",
+    "codigo": "BSLI3",
+    "nome": "BRB BCO DE BRASILIA S.A.",
+    "classe": "ON"
+  },
+  {
+    "ticker": "BSLI4.SA",
+    "codigo": "BSLI4",
+    "nome": "BRB BCO DE BRASILIA S.A.",
+    "classe": "PN"
+  },
+  {
+    "ticker": "CALI3.SA",
+    "codigo": "CALI3",
+    "nome": "CONSTRUTORA ADOLPHO LINDENBERG S.A.",
+    "classe": "ON"
+  },
+  {
+    "ticker": "CAMB3.SA",
+    "codigo": "CAMB3",
+    "nome": "CAMBUCI S.A.",
+    "classe": "ON"
+  },
+  {
+    "ticker": "CAML3.SA",
+    "codigo": "CAML3",
+    "nome": "CAMIL ALIMENTOS S.A.",
+    "classe": "ON"
+  },
+  {
+    "ticker": "CASH3.SA",
+    "codigo": "CASH3",
+    "nome": "MÉLIUZ S.A.",
+    "classe": "ON"
+  },
+  {
+    "ticker": "CBAV3.SA",
+    "codigo": "CBAV3",
+    "nome": "COMPANHIA BRASILEIRA DE ALUMÍNIO",
+    "classe": "ON"
+  },
+  {
+    "ticker": "CBEE3.SA",
+    "codigo": "CBEE3",
+    "nome": "AMPLA ENERGIA E SERVICOS S.A.",
+    "classe": "ON"
+  },
+  {
+    "ticker": "CEAB3.SA",
+    "codigo": "CEAB3",
+    "nome": "CEA MODAS S.A.",
+    "classe": "ON"
+  },
+  {
+    "ticker": "CEBR3.SA",
+    "codigo": "CEBR3",
+    "nome": "CIA ENERGETICA DE BRASILIA",
+    "classe": "ON"
+  },
+  {
+    "ticker": "CEBR5.SA",
+    "codigo": "CEBR5",
+    "nome": "CIA ENERGETICA DE BRASILIA",
+    "classe": "PNA"
+  },
+  {
+    "ticker": "CEBR6.SA",
+    "codigo": "CEBR6",
+    "nome": "CIA ENERGETICA DE BRASILIA",
+    "classe": "PNB"
+  },
+  {
+    "ticker": "CEDO4.SA",
+    "codigo": "CEDO4",
+    "nome": "CIA FIACAO TECIDOS CEDRO CACHOEIRA",
+    "classe": "PN"
+  },
+  {
+    "ticker": "CEEB3.SA",
+    "codigo": "CEEB3",
+    "nome": "CIA ELETRICIDADE EST. DA BAHIA - COELBA",
+    "classe": "ON"
+  },
+  {
+    "ticker": "CEEB5.SA",
+    "codigo": "CEEB5",
+    "nome": "CIA ELETRICIDADE EST. DA BAHIA - COELBA",
+    "classe": "PNA"
+  },
+  {
+    "ticker": "CEED3.SA",
+    "codigo": "CEED3",
+    "nome": "CIA ESTADUAL DE DISTRIB ENER ELET-CEEE-D",
+    "classe": "ON"
+  },
+  {
+    "ticker": "CEGR3.SA",
+    "codigo": "CEGR3",
+    "nome": "CIA DISTRIB DE GAS DO RIO DE JANEIRO-CEG",
+    "classe": "ON"
+  },
+  {
+    "ticker": "CGAS3.SA",
+    "codigo": "CGAS3",
+    "nome": "CIA GAS DE SAO PAULO - COMGAS",
+    "classe": "ON"
+  },
+  {
+    "ticker": "CGAS5.SA",
+    "codigo": "CGAS5",
+    "nome": "CIA GAS DE SAO PAULO - COMGAS",
+    "classe": "PNA"
+  },
+  {
+    "ticker": "CGRA3.SA",
+    "codigo": "CGRA3",
+    "nome": "GRAZZIOTIN S.A.",
+    "classe": "ON"
+  },
+  {
+    "ticker": "CGRA4.SA",
+    "codigo": "CGRA4",
+    "nome": "GRAZZIOTIN S.A.",
+    "classe": "PN"
+  },
+  {
+    "ticker": "CLSC3.SA",
+    "codigo": "CLSC3",
+    "nome": "CENTRAIS ELET DE SANTA CATARINA S.A.",
+    "classe": "ON"
+  },
+  {
+    "ticker": "CLSC4.SA",
+    "codigo": "CLSC4",
+    "nome": "CENTRAIS ELET DE SANTA CATARINA S.A.",
+    "classe": "PN"
+  },
+  {
+    "ticker": "CMIG3.SA",
+    "codigo": "CMIG3",
+    "nome": "CIA ENERGETICA DE MINAS GERAIS - CEMIG",
+    "classe": "ON"
+  },
+  {
+    "ticker": "CMIG4.SA",
+    "codigo": "CMIG4",
+    "nome": "CIA ENERGETICA DE MINAS GERAIS - CEMIG",
+    "classe": "PN"
+  },
+  {
+    "ticker": "CMIN3.SA",
+    "codigo": "CMIN3",
+    "nome": "CSN MINERAÇÃO S.A.",
+    "classe": "ON"
+  },
+  {
+    "ticker": "COCE3.SA",
+    "codigo": "COCE3",
+    "nome": "CIA ENERGETICA DO CEARA - COELCE",
+    "classe": "ON"
+  },
+  {
+    "ticker": "COCE5.SA",
+    "codigo": "COCE5",
+    "nome": "CIA ENERGETICA DO CEARA - COELCE",
+    "classe": "PNA"
+  },
+  {
+    "ticker": "COGN3.SA",
+    "codigo": "COGN3",
+    "nome": "COGNA EDUCAÇÃO S.A.",
+    "classe": "ON"
+  },
+  {
+    "ticker": "CPFE3.SA",
+    "codigo": "CPFE3",
+    "nome": "CPFL ENERGIA S.A.",
+    "classe": "ON"
+  },
+  {
+    "ticker": "CPLE3.SA",
+    "codigo": "CPLE3",
+    "nome": "CIA PARANAENSE DE ENERGIA - COPEL",
+    "classe": "ON"
+  },
+  {
+    "ticker": "CRPG5.SA",
+    "codigo": "CRPG5",
+    "nome": "TRONOX PIGMENTOS DO BRASIL S.A.",
+    "classe": "PNA"
+  },
+  {
+    "ticker": "CRPG6.SA",
+    "codigo": "CRPG6",
+    "nome": "TRONOX PIGMENTOS DO BRASIL S.A.",
+    "classe": "PNB"
+  },
+  {
+    "ticker": "CSAN3.SA",
+    "codigo": "CSAN3",
+    "nome": "COSAN S.A.",
+    "classe": "ON"
+  },
+  {
+    "ticker": "CSED3.SA",
+    "codigo": "CSED3",
+    "nome": "CRUZEIRO DO SUL EDUCACIONAL S.A.",
+    "classe": "ON"
+  },
+  {
+    "ticker": "CSMG3.SA",
+    "codigo": "CSMG3",
+    "nome": "CIA SANEAMENTO DE MINAS GERAIS-COPASA MG",
+    "classe": "ON"
+  },
+  {
+    "ticker": "CSNA3.SA",
+    "codigo": "CSNA3",
+    "nome": "CIA SIDERURGICA NACIONAL",
+    "classe": "ON"
+  },
+  {
+    "ticker": "CSUD3.SA",
+    "codigo": "CSUD3",
+    "nome": "CSU DIGITAL S.A.",
+    "classe": "ON"
+  },
+  {
+    "ticker": "CTAX3.SA",
+    "codigo": "CTAX3",
+    "nome": "CTAX3",
+    "classe": "ON"
+  },
+  {
+    "ticker": "CTKA3.SA",
+    "codigo": "CTKA3",
+    "nome": "KARSTEN S.A.",
+    "classe": "ON"
+  },
+  {
+    "ticker": "CTKA4.SA",
+    "codigo": "CTKA4",
+    "nome": "KARSTEN S.A.",
+    "classe": "PN"
+  },
+  {
+    "ticker": "CURY3.SA",
+    "codigo": "CURY3",
+    "nome": "CURY CONSTRUTORA E INCORPORADORA S.A.",
+    "classe": "ON"
+  },
+  {
+    "ticker": "CVCB3.SA",
+    "codigo": "CVCB3",
+    "nome": "CVC BRASIL OPERADORA E AGÊNCIA DE VIAGENS S.A.",
+    "classe": "ON"
+  },
+  {
+    "ticker": "CXSE3.SA",
+    "codigo": "CXSE3",
+    "nome": "CAIXA SEGURIDADE PARTICIPAÇÕES S.A.",
+    "classe": "ON"
+  },
+  {
+    "ticker": "CYRE3.SA",
+    "codigo": "CYRE3",
+    "nome": "CYRELA BRAZIL REALTY S.A.EMPREEND E PART",
+    "classe": "ON"
+  },
+  {
+    "ticker": "CYRE4.SA",
+    "codigo": "CYRE4",
+    "nome": "CYRELA BRAZIL REALTY S.A.EMPREEND E PART",
+    "classe": "PN"
+  },
+  {
+    "ticker": "DASA3.SA",
+    "codigo": "DASA3",
+    "nome": "DIAGNOSTICOS DA AMERICA S.A.",
+    "classe": "ON"
+  },
+  {
+    "ticker": "DESK3.SA",
+    "codigo": "DESK3",
+    "nome": "DESKTOP S.A.",
+    "classe": "ON"
+  },
+  {
+    "ticker": "DEXP3.SA",
+    "codigo": "DEXP3",
+    "nome": "DEXXOS PARTICIPACOES S.A.",
+    "classe": "ON"
+  },
+  {
+    "ticker": "DEXP4.SA",
+    "codigo": "DEXP4",
+    "nome": "DEXXOS PARTICIPACOES S.A.",
+    "classe": "PN"
+  },
+  {
+    "ticker": "DIRR3.SA",
+    "codigo": "DIRR3",
+    "nome": "DIRECIONAL ENGENHARIA S.A.",
+    "classe": "ON"
+  },
+  {
+    "ticker": "DMVF3.SA",
+    "codigo": "DMVF3",
+    "nome": "D1000 VAREJO FARMA PARTICIPAÇÕES S.A.",
+    "classe": "ON"
+  },
+  {
+    "ticker": "DOHL4.SA",
+    "codigo": "DOHL4",
+    "nome": "DOHLER S.A.",
+    "classe": "PN"
+  },
+  {
+    "ticker": "DOTZ3.SA",
+    "codigo": "DOTZ3",
+    "nome": "DOTZ S.A.",
+    "classe": "ON"
+  },
+  {
+    "ticker": "DXCO3.SA",
+    "codigo": "DXCO3",
+    "nome": "DEXCO S.A.",
+    "classe": "ON"
+  },
+  {
+    "ticker": "EALT3.SA",
+    "codigo": "EALT3",
+    "nome": "ELECTRO ACO ALTONA S.A.",
+    "classe": "ON"
+  },
+  {
+    "ticker": "EALT4.SA",
+    "codigo": "EALT4",
+    "nome": "ELECTRO ACO ALTONA S.A.",
+    "classe": "PN"
+  },
+  {
+    "ticker": "ECOR3.SA",
+    "codigo": "ECOR3",
+    "nome": "ECORODOVIAS INFRAESTRUTURA E LOGÍSTICA S.A.",
+    "classe": "ON"
+  },
+  {
+    "ticker": "EGIE3.SA",
+    "codigo": "EGIE3",
+    "nome": "ENGIE BRASIL ENERGIA S.A.",
+    "classe": "ON"
+  },
+  {
+    "ticker": "EKTR4.SA",
+    "codigo": "EKTR4",
+    "nome": "ELEKTRO REDES S.A.",
+    "classe": "PN"
+  },
+  {
+    "ticker": "EMAE4.SA",
+    "codigo": "EMAE4",
+    "nome": "EMAE - EMPRESA METROP.AGUAS ENERGIA S.A.",
+    "classe": "PN"
+  },
+  {
+    "ticker": "EMBJ3.SA",
+    "codigo": "EMBJ3",
+    "nome": "EMBJ3",
+    "classe": "ON"
+  },
+  {
+    "ticker": "ENEV3.SA",
+    "codigo": "ENEV3",
+    "nome": "ENEVA S.A",
+    "classe": "ON"
+  },
+  {
+    "ticker": "ENGI3.SA",
+    "codigo": "ENGI3",
+    "nome": "ENERGISA S.A.",
+    "classe": "ON"
+  },
+  {
+    "ticker": "ENGI4.SA",
+    "codigo": "ENGI4",
+    "nome": "ENERGISA S.A.",
+    "classe": "PN"
+  },
+  {
+    "ticker": "ENJU3.SA",
+    "codigo": "ENJU3",
+    "nome": "ENJOEI S.A.",
+    "classe": "ON"
+  },
+  {
+    "ticker": "ENMT3.SA",
+    "codigo": "ENMT3",
+    "nome": "ENERGISA MATO GROSSO-DISTRIBUIDORA DE ENERGIA S/A",
+    "classe": "ON"
+  },
+  {
+    "ticker": "ENMT4.SA",
+    "codigo": "ENMT4",
+    "nome": "ENERGISA MATO GROSSO-DISTRIBUIDORA DE ENERGIA S/A",
+    "classe": "PN"
+  },
+  {
+    "ticker": "EPAR3.SA",
+    "codigo": "EPAR3",
+    "nome": "EMBPAR PARTICIPACOES S.A.",
+    "classe": "ON"
+  },
+  {
+    "ticker": "EQPA3.SA",
+    "codigo": "EQPA3",
+    "nome": "EQUATORIAL PARA DISTRIBUIDORA DE ENERGIA S.A.",
+    "classe": "ON"
+  },
+  {
+    "ticker": "EQPA5.SA",
+    "codigo": "EQPA5",
+    "nome": "EQUATORIAL PARA DISTRIBUIDORA DE ENERGIA S.A.",
+    "classe": "PNA"
+  },
+  {
+    "ticker": "EQPA7.SA",
+    "codigo": "EQPA7",
+    "nome": "EQUATORIAL PARA DISTRIBUIDORA DE ENERGIA S.A.",
+    "classe": "PNC"
+  },
+  {
+    "ticker": "EQTL3.SA",
+    "codigo": "EQTL3",
+    "nome": "EQUATORIAL S.A.",
+    "classe": "ON"
+  },
+  {
+    "ticker": "ESPA3.SA",
+    "codigo": "ESPA3",
+    "nome": "MPM CORPÓREOS S.A.",
+    "classe": "ON"
+  },
+  {
+    "ticker": "ESTR4.SA",
+    "codigo": "ESTR4",
+    "nome": "MANUFATURA DE BRINQUEDOS ESTRELA S.A.",
+    "classe": "PN"
+  },
+  {
+    "ticker": "ETER3.SA",
+    "codigo": "ETER3",
+    "nome": "ETERNIT S.A.",
+    "classe": "ON"
+  },
+  {
+    "ticker": "EUCA3.SA",
+    "codigo": "EUCA3",
+    "nome": "EUCATEX S.A. INDUSTRIA E COMERCIO",
+    "classe": "ON"
+  },
+  {
+    "ticker": "EUCA4.SA",
+    "codigo": "EUCA4",
+    "nome": "EUCATEX S.A. INDUSTRIA E COMERCIO",
+    "classe": "PN"
+  },
+  {
+    "ticker": "EVEN3.SA",
+    "codigo": "EVEN3",
+    "nome": "EVEN CONSTRUTORA E INCORPORADORA S.A.",
+    "classe": "ON"
+  },
+  {
+    "ticker": "EZTC3.SA",
+    "codigo": "EZTC3",
+    "nome": "EZ TEC EMPREEND. E PARTICIPACOES S.A.",
+    "classe": "ON"
+  },
+  {
+    "ticker": "FESA3.SA",
+    "codigo": "FESA3",
+    "nome": "CIA FERRO LIGAS DA BAHIA - FERBASA",
+    "classe": "ON"
+  },
+  {
+    "ticker": "FESA4.SA",
+    "codigo": "FESA4",
+    "nome": "CIA FERRO LIGAS DA BAHIA - FERBASA",
+    "classe": "PN"
+  },
+  {
+    "ticker": "FHER3.SA",
+    "codigo": "FHER3",
+    "nome": "FERTILIZANTES HERINGER S.A.",
+    "classe": "ON"
+  },
+  {
+    "ticker": "FICT3.SA",
+    "codigo": "FICT3",
+    "nome": "FICTOR ALIMENTOS S.A",
+    "classe": "ON"
+  },
+  {
+    "ticker": "FIQE3.SA",
+    "codigo": "FIQE3",
+    "nome": "UNIFIQUE TELECOMUNICAÇÕES S.A.",
+    "classe": "ON"
+  },
+  {
+    "ticker": "FLRY3.SA",
+    "codigo": "FLRY3",
+    "nome": "FLEURY S.A.",
+    "classe": "ON"
+  },
+  {
+    "ticker": "FRAS3.SA",
+    "codigo": "FRAS3",
+    "nome": "FRASLE MOBILITY S.A.",
+    "classe": "ON"
+  },
+  {
+    "ticker": "GEPA3.SA",
+    "codigo": "GEPA3",
+    "nome": "RIO PARANAPANEMA ENERGIA S.A.",
+    "classe": "ON"
+  },
+  {
+    "ticker": "GEPA4.SA",
+    "codigo": "GEPA4",
+    "nome": "RIO PARANAPANEMA ENERGIA S.A.",
+    "classe": "PN"
+  },
+  {
+    "ticker": "GFSA3.SA",
+    "codigo": "GFSA3",
+    "nome": "GAFISA S.A.",
+    "classe": "ON"
+  },
+  {
+    "ticker": "GGBR3.SA",
+    "codigo": "GGBR3",
+    "nome": "GERDAU S.A.",
+    "classe": "ON"
+  },
+  {
+    "ticker": "GGBR4.SA",
+    "codigo": "GGBR4",
+    "nome": "GERDAU S.A.",
+    "classe": "PN"
+  },
+  {
+    "ticker": "GGPS3.SA",
+    "codigo": "GGPS3",
+    "nome": "GPS PARTICIPACOES E EMPREENDIMENTOS S.A.",
+    "classe": "ON"
+  },
+  {
+    "ticker": "GMAT3.SA",
+    "codigo": "GMAT3",
+    "nome": "GRUPO MATEUS S.A.",
+    "classe": "ON"
+  },
+  {
+    "ticker": "GOAU3.SA",
+    "codigo": "GOAU3",
+    "nome": "METALURGICA GERDAU S.A.",
+    "classe": "ON"
+  },
+  {
+    "ticker": "GOAU4.SA",
+    "codigo": "GOAU4",
+    "nome": "METALURGICA GERDAU S.A.",
+    "classe": "PN"
+  },
+  {
+    "ticker": "GPAR3.SA",
+    "codigo": "GPAR3",
+    "nome": "CIA CELG DE PARTICIPACOES - CELGPAR",
+    "classe": "ON"
+  },
+  {
+    "ticker": "GRND3.SA",
+    "codigo": "GRND3",
+    "nome": "GRENDENE S.A.",
+    "classe": "ON"
+  },
+  {
+    "ticker": "GSHP3.SA",
+    "codigo": "GSHP3",
+    "nome": "GENERAL SHOPPING E OUTLETS DO BRASIL S.A.",
+    "classe": "ON"
+  },
+  {
+    "ticker": "HAGA3.SA",
+    "codigo": "HAGA3",
+    "nome": "HAGA S.A. INDUSTRIA E COMERCIO",
+    "classe": "ON"
+  },
+  {
+    "ticker": "HAGA4.SA",
+    "codigo": "HAGA4",
+    "nome": "HAGA S.A. INDUSTRIA E COMERCIO",
+    "classe": "PN"
+  },
+  {
+    "ticker": "HAPV3.SA",
+    "codigo": "HAPV3",
+    "nome": "HAPVIDA PARTICIPACOES E INVESTIMENTOS SA",
+    "classe": "ON"
+  },
+  {
+    "ticker": "HBOR3.SA",
+    "codigo": "HBOR3",
+    "nome": "HELBOR EMPREENDIMENTOS S.A.",
+    "classe": "ON"
+  },
+  {
+    "ticker": "HBRE3.SA",
+    "codigo": "HBRE3",
+    "nome": "HBR REALTY EMPREENDIMENTOS IMOBILIARIOS S/A",
+    "classe": "ON"
+  },
+  {
+    "ticker": "HBSA3.SA",
+    "codigo": "HBSA3",
+    "nome": "HIDROVIAS DO BRASIL S.A.",
+    "classe": "ON"
+  },
+  {
+    "ticker": "HBTS5.SA",
+    "codigo": "HBTS5",
+    "nome": "CIA HABITASUL DE PARTICIPACOES",
+    "classe": "PNA"
+  },
+  {
+    "ticker": "HETA4.SA",
+    "codigo": "HETA4",
+    "nome": "HERCULES S.A. FABRICA DE TALHERES",
+    "classe": "PN"
+  },
+  {
+    "ticker": "HOOT4.SA",
+    "codigo": "HOOT4",
+    "nome": "HOTEIS OTHON S.A.",
+    "classe": "PN"
+  },
+  {
+    "ticker": "HYPE3.SA",
+    "codigo": "HYPE3",
+    "nome": "HYPERA S.A.",
+    "classe": "ON"
+  },
+  {
+    "ticker": "IFCM3.SA",
+    "codigo": "IFCM3",
+    "nome": "INFRACOMMERCE CXAAS S.A.",
+    "classe": "ON"
+  },
+  {
+    "ticker": "IGTI3.SA",
+    "codigo": "IGTI3",
+    "nome": "IGUATEMI S.A.",
+    "classe": "ON"
+  },
+  {
+    "ticker": "IGTI4.SA",
+    "codigo": "IGTI4",
+    "nome": "IGUATEMI S.A.",
+    "classe": "PN"
+  },
+  {
+    "ticker": "INEP3.SA",
+    "codigo": "INEP3",
+    "nome": "INEPAR S.A. INDUSTRIA E CONSTRUCOES",
+    "classe": "ON"
+  },
+  {
+    "ticker": "INEP4.SA",
+    "codigo": "INEP4",
+    "nome": "INEPAR S.A. INDUSTRIA E CONSTRUCOES",
+    "classe": "PN"
+  },
+  {
+    "ticker": "INTB3.SA",
+    "codigo": "INTB3",
+    "nome": "INTELBRAS S.A. IND DE TELEC ELETRONICA BRASILEIRA",
+    "classe": "ON"
+  },
+  {
+    "ticker": "IRBR3.SA",
+    "codigo": "IRBR3",
+    "nome": "IRB - BRASIL RESSEGUROS S.A.",
+    "classe": "ON"
+  },
+  {
+    "ticker": "ISAE3.SA",
+    "codigo": "ISAE3",
+    "nome": "ISA ENERGIA BRASIL S.A",
+    "classe": "ON"
+  },
+  {
+    "ticker": "ISAE4.SA",
+    "codigo": "ISAE4",
+    "nome": "ISA ENERGIA BRASIL S.A",
+    "classe": "PN"
+  },
+  {
+    "ticker": "ITSA3.SA",
+    "codigo": "ITSA3",
+    "nome": "ITAUSA S.A.",
+    "classe": "ON"
+  },
+  {
+    "ticker": "ITSA4.SA",
+    "codigo": "ITSA4",
+    "nome": "ITAUSA S.A.",
+    "classe": "PN"
+  },
+  {
+    "ticker": "ITUB3.SA",
+    "codigo": "ITUB3",
+    "nome": "ITAU UNIBANCO HOLDING S.A.",
+    "classe": "ON"
+  },
+  {
+    "ticker": "ITUB4.SA",
+    "codigo": "ITUB4",
+    "nome": "ITAU UNIBANCO HOLDING S.A.",
+    "classe": "PN"
+  },
+  {
+    "ticker": "JALL3.SA",
+    "codigo": "JALL3",
+    "nome": "JALLES MACHADO S.A.",
+    "classe": "ON"
+  },
+  {
+    "ticker": "JFEN3.SA",
+    "codigo": "JFEN3",
+    "nome": "JOAO FORTES ENGENHARIA S.A.",
+    "classe": "ON"
+  },
+  {
+    "ticker": "JHSF3.SA",
+    "codigo": "JHSF3",
+    "nome": "JHSF PARTICIPACOES S.A.",
+    "classe": "ON"
+  },
+  {
+    "ticker": "JOPA3.SA",
+    "codigo": "JOPA3",
+    "nome": "JOSAPAR-JOAQUIM OLIVEIRA S.A. - PARTICIP",
+    "classe": "ON"
+  },
+  {
+    "ticker": "JSLG3.SA",
+    "codigo": "JSLG3",
+    "nome": "JSL S.A.",
+    "classe": "ON"
+  },
+  {
+    "ticker": "KEPL3.SA",
+    "codigo": "KEPL3",
+    "nome": "KEPLER WEBER S.A.",
+    "classe": "ON"
+  },
+  {
+    "ticker": "KLBN3.SA",
+    "codigo": "KLBN3",
+    "nome": "KLABIN S.A.",
+    "classe": "ON"
+  },
+  {
+    "ticker": "KLBN4.SA",
+    "codigo": "KLBN4",
+    "nome": "KLABIN S.A.",
+    "classe": "PN"
+  },
+  {
+    "ticker": "LAND3.SA",
+    "codigo": "LAND3",
+    "nome": "TERRA SANTA PROPRIEDADES AGRICOLAS S.A.",
+    "classe": "ON"
+  },
+  {
+    "ticker": "LAVV3.SA",
+    "codigo": "LAVV3",
+    "nome": "LAVVI EMPREENDIMENTOS IMOBILIÁRIOS S.A.",
+    "classe": "ON"
+  },
+  {
+    "ticker": "LEVE3.SA",
+    "codigo": "LEVE3",
+    "nome": "MAHLE-METAL LEVE S.A.",
+    "classe": "ON"
+  },
+  {
+    "ticker": "LIGT3.SA",
+    "codigo": "LIGT3",
+    "nome": "LIGHT S.A.",
+    "classe": "ON"
+  },
+  {
+    "ticker": "LJQQ3.SA",
+    "codigo": "LJQQ3",
+    "nome": "LOJAS QUERO-QUERO S/A",
+    "classe": "ON"
+  },
+  {
+    "ticker": "LOGG3.SA",
+    "codigo": "LOGG3",
+    "nome": "LOG COMMERCIAL PROPERTIES",
+    "classe": "ON"
+  },
+  {
+    "ticker": "LOGN3.SA",
+    "codigo": "LOGN3",
+    "nome": "LOG-IN LOGISTICA INTERMODAL S.A.",
+    "classe": "ON"
+  },
+  {
+    "ticker": "LPSB3.SA",
+    "codigo": "LPSB3",
+    "nome": "LPS BRASIL - CONSULTORIA DE IMOVEIS S.A.",
+    "classe": "ON"
+  },
+  {
+    "ticker": "LREN3.SA",
+    "codigo": "LREN3",
+    "nome": "LOJAS RENNER S.A.",
+    "classe": "ON"
+  },
+  {
+    "ticker": "LUPA3.SA",
+    "codigo": "LUPA3",
+    "nome": "LUPATECH S.A.",
+    "classe": "ON"
+  },
+  {
+    "ticker": "LUXM4.SA",
+    "codigo": "LUXM4",
+    "nome": "TREVISA INVESTIMENTOS S.A.",
+    "classe": "PN"
+  },
+  {
+    "ticker": "LWSA3.SA",
+    "codigo": "LWSA3",
+    "nome": "LWSA S.A.",
+    "classe": "ON"
+  },
+  {
+    "ticker": "MATD3.SA",
+    "codigo": "MATD3",
+    "nome": "HOSPITAL MATER DEI S/A",
+    "classe": "ON"
+  },
+  {
+    "ticker": "MBRF3.SA",
+    "codigo": "MBRF3",
+    "nome": "MBRF3",
+    "classe": "ON"
+  },
+  {
+    "ticker": "MDIA3.SA",
+    "codigo": "MDIA3",
+    "nome": "M.DIAS BRANCO S.A. IND COM DE ALIMENTOS",
+    "classe": "ON"
+  },
+  {
+    "ticker": "MDNE3.SA",
+    "codigo": "MDNE3",
+    "nome": "MOURA DUBEUX ENGENHARIA S/A",
+    "classe": "ON"
+  },
+  {
+    "ticker": "MEAL3.SA",
+    "codigo": "MEAL3",
+    "nome": "INTERNATIONAL MEAL COMPANY ALIMENTACAO S.A.",
+    "classe": "ON"
+  },
+  {
+    "ticker": "MELK3.SA",
+    "codigo": "MELK3",
+    "nome": "MELNICK DESENVOLVIMENTO IMOBILIÁRIO S.A.",
+    "classe": "ON"
+  },
+  {
+    "ticker": "MGEL4.SA",
+    "codigo": "MGEL4",
+    "nome": "MANGELS INDUSTRIAL S.A.",
+    "classe": "PN"
+  },
+  {
+    "ticker": "MGLU3.SA",
+    "codigo": "MGLU3",
+    "nome": "MAGAZINE LUIZA S.A.",
+    "classe": "ON"
+  },
+  {
+    "ticker": "MILS3.SA",
+    "codigo": "MILS3",
+    "nome": "MILLS LOCAÇÃO. SERVIÇOS E LOGÍSTICA S.A",
+    "classe": "ON"
+  },
+  {
+    "ticker": "MLAS3.SA",
+    "codigo": "MLAS3",
+    "nome": "GRUPO MULTI S.A.",
+    "classe": "ON"
+  },
+  {
+    "ticker": "MNDL3.SA",
+    "codigo": "MNDL3",
+    "nome": "MUNDIAL S.A. - PRODUTOS DE CONSUMO",
+    "classe": "ON"
+  },
+  {
+    "ticker": "MNPR3.SA",
+    "codigo": "MNPR3",
+    "nome": "MINUPAR PARTICIPACOES S.A.",
+    "classe": "ON"
+  },
+  {
+    "ticker": "MOTV3.SA",
+    "codigo": "MOTV3",
+    "nome": "MOTIVA INFRAESTRUTURA DE MOBILIDADE S.A.",
+    "classe": "ON"
+  },
+  {
+    "ticker": "MOVI3.SA",
+    "codigo": "MOVI3",
+    "nome": "MOVIDA PARTICIPACOES SA",
+    "classe": "ON"
+  },
+  {
+    "ticker": "MRVE3.SA",
+    "codigo": "MRVE3",
+    "nome": "MRV ENGENHARIA E PARTICIPACOES S.A.",
+    "classe": "ON"
+  },
+  {
+    "ticker": "MSPA3.SA",
+    "codigo": "MSPA3",
+    "nome": "CIA MELHORAMENTOS DE SAO PAULO",
+    "classe": "ON"
+  },
+  {
+    "ticker": "MTRE3.SA",
+    "codigo": "MTRE3",
+    "nome": "MITRE REALTY EMPREENDIMENTOS E PARTICIPAÇÕES S.A.",
+    "classe": "ON"
+  },
+  {
+    "ticker": "MTSA4.SA",
+    "codigo": "MTSA4",
+    "nome": "METISA METALURGICA TIMBOENSE S.A.",
+    "classe": "PN"
+  },
+  {
+    "ticker": "MULT3.SA",
+    "codigo": "MULT3",
+    "nome": "MULTIPLAN - EMPREEND IMOBILIARIOS S.A.",
+    "classe": "ON"
+  },
+  {
+    "ticker": "MWET3.SA",
+    "codigo": "MWET3",
+    "nome": "WETZEL S.A.",
+    "classe": "ON"
+  },
+  {
+    "ticker": "MWET4.SA",
+    "codigo": "MWET4",
+    "nome": "WETZEL S.A.",
+    "classe": "PN"
+  },
+  {
+    "ticker": "MYPK3.SA",
+    "codigo": "MYPK3",
+    "nome": "IOCHPE MAXION S.A.",
+    "classe": "ON"
+  },
+  {
+    "ticker": "NATU3.SA",
+    "codigo": "NATU3",
+    "nome": "NATURA COSMETICOS S.A.",
+    "classe": "ON"
+  },
+  {
+    "ticker": "NEXP3.SA",
+    "codigo": "NEXP3",
+    "nome": "NEXPE PARTICIPAÇÕES S.A",
+    "classe": "ON"
+  },
+  {
+    "ticker": "NGRD3.SA",
+    "codigo": "NGRD3",
+    "nome": "NEOGRID PARTICIPACOES S.A.",
+    "classe": "ON"
+  },
+  {
+    "ticker": "NORD3.SA",
+    "codigo": "NORD3",
+    "nome": "NORDON INDUSTRIAS METALURGICAS S.A.",
+    "classe": "ON"
+  },
+  {
+    "ticker": "NUTR3.SA",
+    "codigo": "NUTR3",
+    "nome": "NUTRIPLANT INDUSTRIA E COMERCIO S.A.",
+    "classe": "ON"
+  },
+  {
+    "ticker": "OBTC3.SA",
+    "codigo": "OBTC3",
+    "nome": "ORANJEBTC S.A. - EDUCAÇÃO E INVESTIMENTO",
+    "classe": "ON"
+  },
+  {
+    "ticker": "OFSA3.SA",
+    "codigo": "OFSA3",
+    "nome": "OUROFINO S.A.",
+    "classe": "ON"
+  },
+  {
+    "ticker": "OIBR3.SA",
+    "codigo": "OIBR3",
+    "nome": "OI S.A.",
+    "classe": "ON"
+  },
+  {
+    "ticker": "OIBR4.SA",
+    "codigo": "OIBR4",
+    "nome": "OI S.A.",
+    "classe": "PN"
+  },
+  {
+    "ticker": "ONCO3.SA",
+    "codigo": "ONCO3",
+    "nome": "ONCOCLINICAS DO BRASIL SERVICOS MEDICOS  S.A.",
+    "classe": "ON"
+  },
+  {
+    "ticker": "OPCT3.SA",
+    "codigo": "OPCT3",
+    "nome": "OCEANPACT SERVICOS MARITIMOS S.A.",
+    "classe": "ON"
+  },
+  {
+    "ticker": "ORVR3.SA",
+    "codigo": "ORVR3",
+    "nome": "ORIZON VALORIZACAO DE RESIDUOS S.A.",
+    "classe": "ON"
+  },
+  {
+    "ticker": "OSXB3.SA",
+    "codigo": "OSXB3",
+    "nome": "OSX BRASIL S.A.",
+    "classe": "ON"
+  },
+  {
+    "ticker": "PASS3.SA",
+    "codigo": "PASS3",
+    "nome": "COMPASS GAS E ENERGIA S.A.",
+    "classe": "ON"
+  },
+  {
+    "ticker": "PATI3.SA",
+    "codigo": "PATI3",
+    "nome": "PANATLANTICA S.A.",
+    "classe": "ON"
+  },
+  {
+    "ticker": "PCAR3.SA",
+    "codigo": "PCAR3",
+    "nome": "CIA BRASILEIRA DE DISTRIBUICAO",
+    "classe": "ON"
+  },
+  {
+    "ticker": "PDGR3.SA",
+    "codigo": "PDGR3",
+    "nome": "PDG REALTY S.A. EMPREEND E PARTICIPACOES",
+    "classe": "ON"
+  },
+  {
+    "ticker": "PDTC3.SA",
+    "codigo": "PDTC3",
+    "nome": "PADTEC HOLDING S.A.",
+    "classe": "ON"
+  },
+  {
+    "ticker": "PEAB3.SA",
+    "codigo": "PEAB3",
+    "nome": "CIA PARTICIPACOES ALIANCA DA BAHIA",
+    "classe": "ON"
+  },
+  {
+    "ticker": "PEAB4.SA",
+    "codigo": "PEAB4",
+    "nome": "CIA PARTICIPACOES ALIANCA DA BAHIA",
+    "classe": "PN"
+  },
+  {
+    "ticker": "PETR3.SA",
+    "codigo": "PETR3",
+    "nome": "PETROLEO BRASILEIRO S.A. PETROBRAS",
+    "classe": "ON"
+  },
+  {
+    "ticker": "PETR4.SA",
+    "codigo": "PETR4",
+    "nome": "PETROLEO BRASILEIRO S.A. PETROBRAS",
+    "classe": "PN"
+  },
+  {
+    "ticker": "PFRM3.SA",
+    "codigo": "PFRM3",
+    "nome": "PROFARMA DISTRIB PROD FARMACEUTICOS S.A.",
+    "classe": "ON"
+  },
+  {
+    "ticker": "PGMN3.SA",
+    "codigo": "PGMN3",
+    "nome": "EMPREENDIMENTOS PAGUE MENOS S.A.",
+    "classe": "ON"
+  },
+  {
+    "ticker": "PINE3.SA",
+    "codigo": "PINE3",
+    "nome": "BCO PINE S.A.",
+    "classe": "ON"
+  },
+  {
+    "ticker": "PINE4.SA",
+    "codigo": "PINE4",
+    "nome": "BCO PINE S.A.",
+    "classe": "PN"
+  },
+  {
+    "ticker": "PLAS3.SA",
+    "codigo": "PLAS3",
+    "nome": "PLASCAR PARTICIPACOES INDUSTRIAIS S.A.",
+    "classe": "ON"
+  },
+  {
+    "ticker": "PLPL3.SA",
+    "codigo": "PLPL3",
+    "nome": "PLANO & PLANO DESENVOLVIMENTO IMOBILIÁRIO S.A.",
+    "classe": "ON"
+  },
+  {
+    "ticker": "PMAM3.SA",
+    "codigo": "PMAM3",
+    "nome": "PARANAPANEMA S.A.",
+    "classe": "ON"
+  },
+  {
+    "ticker": "PNVL3.SA",
+    "codigo": "PNVL3",
+    "nome": "DIMED S.A. DISTRIBUIDORA DE MEDICAMENTOS",
+    "classe": "ON"
+  },
+  {
+    "ticker": "POMO3.SA",
+    "codigo": "POMO3",
+    "nome": "MARCOPOLO S.A.",
+    "classe": "ON"
+  },
+  {
+    "ticker": "POMO4.SA",
+    "codigo": "POMO4",
+    "nome": "MARCOPOLO S.A.",
+    "classe": "PN"
+  },
+  {
+    "ticker": "POSI3.SA",
+    "codigo": "POSI3",
+    "nome": "POSITIVO TECNOLOGIA S.A.",
+    "classe": "ON"
+  },
+  {
+    "ticker": "PRIO3.SA",
+    "codigo": "PRIO3",
+    "nome": "PRIO S.A.",
+    "classe": "ON"
+  },
+  {
+    "ticker": "PRNR3.SA",
+    "codigo": "PRNR3",
+    "nome": "PRINER SERVIÇOS INDUSTRIAIS S.A.",
+    "classe": "ON"
+  },
+  {
+    "ticker": "PSSA3.SA",
+    "codigo": "PSSA3",
+    "nome": "PORTO SEGURO S.A.",
+    "classe": "ON"
+  },
+  {
+    "ticker": "PTBL3.SA",
+    "codigo": "PTBL3",
+    "nome": "PBG S/A",
+    "classe": "ON"
+  },
+  {
+    "ticker": "QUAL3.SA",
+    "codigo": "QUAL3",
+    "nome": "QUALICORP CONSULTORIA E CORRETORA DE SEGUROS S.A.",
+    "classe": "ON"
+  },
+  {
+    "ticker": "RADL3.SA",
+    "codigo": "RADL3",
+    "nome": "RAIA DROGASIL S.A.",
+    "classe": "ON"
+  },
+  {
+    "ticker": "RAIL3.SA",
+    "codigo": "RAIL3",
+    "nome": "RUMO S.A.",
+    "classe": "ON"
+  },
+  {
+    "ticker": "RAIZ4.SA",
+    "codigo": "RAIZ4",
+    "nome": "RAIZEN S.A.",
+    "classe": "PN"
+  },
+  {
+    "ticker": "RANI3.SA",
+    "codigo": "RANI3",
+    "nome": "IRANI PAPEL E EMBALAGEM S.A.",
+    "classe": "ON"
+  },
+  {
+    "ticker": "RAPT3.SA",
+    "codigo": "RAPT3",
+    "nome": "RANDONCORP S.A.",
+    "classe": "ON"
+  },
+  {
+    "ticker": "RAPT4.SA",
+    "codigo": "RAPT4",
+    "nome": "RANDONCORP S.A.",
+    "classe": "PN"
+  },
+  {
+    "ticker": "RCSL3.SA",
+    "codigo": "RCSL3",
+    "nome": "RECRUSUL S.A.",
+    "classe": "ON"
+  },
+  {
+    "ticker": "RCSL4.SA",
+    "codigo": "RCSL4",
+    "nome": "RECRUSUL S.A.",
+    "classe": "PN"
+  },
+  {
+    "ticker": "RDOR3.SA",
+    "codigo": "RDOR3",
+    "nome": "REDE DOR SÃO LUIZ S.A.",
+    "classe": "ON"
+  },
+  {
+    "ticker": "RECV3.SA",
+    "codigo": "RECV3",
+    "nome": "PETRORECÔNCAVO S.A.",
+    "classe": "ON"
+  },
+  {
+    "ticker": "REDE3.SA",
+    "codigo": "REDE3",
+    "nome": "REDE ENERGIA PARTICIPAÇÕES S.A.",
+    "classe": "ON"
+  },
+  {
+    "ticker": "RENT3.SA",
+    "codigo": "RENT3",
+    "nome": "LOCALIZA RENT A CAR S.A.",
+    "classe": "ON"
+  },
+  {
+    "ticker": "RENT4.SA",
+    "codigo": "RENT4",
+    "nome": "LOCALIZA RENT A CAR S.A.",
+    "classe": "PN"
+  },
+  {
+    "ticker": "RIAA3.SA",
+    "codigo": "RIAA3",
+    "nome": "RIAA3",
+    "classe": "ON"
+  },
+  {
+    "ticker": "RNEW3.SA",
+    "codigo": "RNEW3",
+    "nome": "RENOVA ENERGIA S.A.",
+    "classe": "ON"
+  },
+  {
+    "ticker": "RNEW4.SA",
+    "codigo": "RNEW4",
+    "nome": "RENOVA ENERGIA S.A.",
+    "classe": "PN"
+  },
+  {
+    "ticker": "ROMI3.SA",
+    "codigo": "ROMI3",
+    "nome": "ROMI S.A.",
+    "classe": "ON"
+  },
+  {
+    "ticker": "RPAD3.SA",
+    "codigo": "RPAD3",
+    "nome": "ALFA HOLDINGS S.A.",
+    "classe": "ON"
+  },
+  {
+    "ticker": "RPAD5.SA",
+    "codigo": "RPAD5",
+    "nome": "ALFA HOLDINGS S.A.",
+    "classe": "PNA"
+  },
+  {
+    "ticker": "RPAD6.SA",
+    "codigo": "RPAD6",
+    "nome": "ALFA HOLDINGS S.A.",
+    "classe": "PNB"
+  },
+  {
+    "ticker": "RPMG3.SA",
+    "codigo": "RPMG3",
+    "nome": "REFINARIA DE PETROLEOS MANGUINHOS S.A.",
+    "classe": "ON"
+  },
+  {
+    "ticker": "RSUL4.SA",
+    "codigo": "RSUL4",
+    "nome": "METALURGICA RIOSULENSE S.A.",
+    "classe": "PN"
+  },
+  {
+    "ticker": "RVEE3.SA",
+    "codigo": "RVEE3",
+    "nome": "REVEE S.A.",
+    "classe": "ON"
+  },
+  {
+    "ticker": "SANB3.SA",
+    "codigo": "SANB3",
+    "nome": "BCO SANTANDER (BRASIL) S.A.",
+    "classe": "ON"
+  },
+  {
+    "ticker": "SANB4.SA",
+    "codigo": "SANB4",
+    "nome": "BCO SANTANDER (BRASIL) S.A.",
+    "classe": "PN"
+  },
+  {
+    "ticker": "SAPR3.SA",
+    "codigo": "SAPR3",
+    "nome": "CIA SANEAMENTO DO PARANA - SANEPAR",
+    "classe": "ON"
+  },
+  {
+    "ticker": "SAPR4.SA",
+    "codigo": "SAPR4",
+    "nome": "CIA SANEAMENTO DO PARANA - SANEPAR",
+    "classe": "PN"
+  },
+  {
+    "ticker": "SAUD3.SA",
+    "codigo": "SAUD3",
+    "nome": "SAUD3",
+    "classe": "ON"
+  },
+  {
+    "ticker": "SBFG3.SA",
+    "codigo": "SBFG3",
+    "nome": "GRUPO SBF SA",
+    "classe": "ON"
+  },
+  {
+    "ticker": "SBSP3.SA",
+    "codigo": "SBSP3",
+    "nome": "CIA SANEAMENTO BASICO EST SAO PAULO",
+    "classe": "ON"
+  },
+  {
+    "ticker": "SCAR3.SA",
+    "codigo": "SCAR3",
+    "nome": "SAO CARLOS EMPREEND E PARTICIPACOES S.A.",
+    "classe": "ON"
+  },
+  {
+    "ticker": "SEER3.SA",
+    "codigo": "SEER3",
+    "nome": "SER EDUCACIONAL S.A.",
+    "classe": "ON"
+  },
+  {
+    "ticker": "SEQL3.SA",
+    "codigo": "SEQL3",
+    "nome": "SEQUOIA LOGISTICA E TRANSPORTES S.A",
+    "classe": "ON"
+  },
+  {
+    "ticker": "SHOW3.SA",
+    "codigo": "SHOW3",
+    "nome": "T4F ENTRETENIMENTO S.A.",
+    "classe": "ON"
+  },
+  {
+    "ticker": "SHUL4.SA",
+    "codigo": "SHUL4",
+    "nome": "SCHULZ S.A.",
+    "classe": "PN"
+  },
+  {
+    "ticker": "SIMH3.SA",
+    "codigo": "SIMH3",
+    "nome": "SIMPAR S.A.",
+    "classe": "ON"
+  },
+  {
+    "ticker": "SLCE3.SA",
+    "codigo": "SLCE3",
+    "nome": "SLC AGRICOLA S.A.",
+    "classe": "ON"
+  },
+  {
+    "ticker": "SMFT3.SA",
+    "codigo": "SMFT3",
+    "nome": "SMARTFIT ESCOLA DE GINÁSTICA E DANÇA S.A.",
+    "classe": "ON"
+  },
+  {
+    "ticker": "SMTO3.SA",
+    "codigo": "SMTO3",
+    "nome": "SAO MARTINHO S.A.",
+    "classe": "ON"
+  },
+  {
+    "ticker": "SNSY3.SA",
+    "codigo": "SNSY3",
+    "nome": "SANSUY S.A. INDUSTRIA DE PLASTICOS",
+    "classe": "ON"
+  },
+  {
+    "ticker": "SNSY5.SA",
+    "codigo": "SNSY5",
+    "nome": "SANSUY S.A. INDUSTRIA DE PLASTICOS",
+    "classe": "PNA"
+  },
+  {
+    "ticker": "SOJA3.SA",
+    "codigo": "SOJA3",
+    "nome": "BOA SAFRA SEMENTES S.A.",
+    "classe": "ON"
+  },
+  {
+    "ticker": "SOND5.SA",
+    "codigo": "SOND5",
+    "nome": "SONDOTECNICA ENGENHARIA SOLOS S.A.",
+    "classe": "PNA"
+  },
+  {
+    "ticker": "SUZB3.SA",
+    "codigo": "SUZB3",
+    "nome": "SUZANO S.A.",
+    "classe": "ON"
+  },
+  {
+    "ticker": "SYNE3.SA",
+    "codigo": "SYNE3",
+    "nome": "SYN PROP E TECH S.A.",
+    "classe": "ON"
+  },
+  {
+    "ticker": "TAEE3.SA",
+    "codigo": "TAEE3",
+    "nome": "TRANSMISSORA ALIANÇA DE ENERGIA ELÉTRICA S.A.",
+    "classe": "ON"
+  },
+  {
+    "ticker": "TAEE4.SA",
+    "codigo": "TAEE4",
+    "nome": "TRANSMISSORA ALIANÇA DE ENERGIA ELÉTRICA S.A.",
+    "classe": "PN"
+  },
+  {
+    "ticker": "TASA3.SA",
+    "codigo": "TASA3",
+    "nome": "TAURUS ARMAS S.A.",
+    "classe": "ON"
+  },
+  {
+    "ticker": "TASA4.SA",
+    "codigo": "TASA4",
+    "nome": "TAURUS ARMAS S.A.",
+    "classe": "PN"
+  },
+  {
+    "ticker": "TCSA3.SA",
+    "codigo": "TCSA3",
+    "nome": "TECNISA S.A.",
+    "classe": "ON"
+  },
+  {
+    "ticker": "TECN3.SA",
+    "codigo": "TECN3",
+    "nome": "TECHNOS S.A.",
+    "classe": "ON"
+  },
+  {
+    "ticker": "TELB3.SA",
+    "codigo": "TELB3",
+    "nome": "TELEC BRASILEIRAS S.A. TELEBRAS",
+    "classe": "ON"
+  },
+  {
+    "ticker": "TELB4.SA",
+    "codigo": "TELB4",
+    "nome": "TELEC BRASILEIRAS S.A. TELEBRAS",
+    "classe": "PN"
+  },
+  {
+    "ticker": "TEND3.SA",
+    "codigo": "TEND3",
+    "nome": "CONSTRUTORA TENDA S.A.",
+    "classe": "ON"
+  },
+  {
+    "ticker": "TFCO4.SA",
+    "codigo": "TFCO4",
+    "nome": "TRACK & FIELD CO S.A.",
+    "classe": "PN"
+  },
+  {
+    "ticker": "TGMA3.SA",
+    "codigo": "TGMA3",
+    "nome": "TEGMA GESTAO LOGISTICA S.A.",
+    "classe": "ON"
+  },
+  {
+    "ticker": "TIMS3.SA",
+    "codigo": "TIMS3",
+    "nome": "TIM S.A.",
+    "classe": "ON"
+  },
+  {
+    "ticker": "TOKY3.SA",
+    "codigo": "TOKY3",
+    "nome": "TOKY3",
+    "classe": "ON"
+  },
+  {
+    "ticker": "TOTS3.SA",
+    "codigo": "TOTS3",
+    "nome": "TOTVS S.A.",
+    "classe": "ON"
+  },
+  {
+    "ticker": "TPIS3.SA",
+    "codigo": "TPIS3",
+    "nome": "TPI - TRIUNFO PARTICIP. E INVEST. S.A.",
+    "classe": "ON"
+  },
+  {
+    "ticker": "TRAD3.SA",
+    "codigo": "TRAD3",
+    "nome": "TC S.A.",
+    "classe": "ON"
+  },
+  {
+    "ticker": "TRIS3.SA",
+    "codigo": "TRIS3",
+    "nome": "TRISUL S.A.",
+    "classe": "ON"
+  },
+  {
+    "ticker": "TTEN3.SA",
+    "codigo": "TTEN3",
+    "nome": "TRÊS TENTOS AGROINDUSTRIAL S/A",
+    "classe": "ON"
+  },
+  {
+    "ticker": "TUPY3.SA",
+    "codigo": "TUPY3",
+    "nome": "TUPY S.A.",
+    "classe": "ON"
+  },
+  {
+    "ticker": "TXRX3.SA",
+    "codigo": "TXRX3",
+    "nome": "TEXTIL RENAUXVIEW S.A.",
+    "classe": "ON"
+  },
+  {
+    "ticker": "UCAS3.SA",
+    "codigo": "UCAS3",
+    "nome": "UNICASA INDÚSTRIA DE MÓVEIS S.A.",
+    "classe": "ON"
+  },
+  {
+    "ticker": "UGPA3.SA",
+    "codigo": "UGPA3",
+    "nome": "ULTRAPAR PARTICIPACOES S.A.",
+    "classe": "ON"
+  },
+  {
+    "ticker": "UNIP3.SA",
+    "codigo": "UNIP3",
+    "nome": "UNIPAR CARBOCLORO S.A.",
+    "classe": "ON"
+  },
+  {
+    "ticker": "UNIP5.SA",
+    "codigo": "UNIP5",
+    "nome": "UNIPAR CARBOCLORO S.A.",
+    "classe": "PNA"
+  },
+  {
+    "ticker": "UNIP6.SA",
+    "codigo": "UNIP6",
+    "nome": "UNIPAR CARBOCLORO S.A.",
+    "classe": "PNB"
+  },
+  {
+    "ticker": "USIM3.SA",
+    "codigo": "USIM3",
+    "nome": "USINAS SID DE MINAS GERAIS S.A.-USIMINAS",
+    "classe": "ON"
+  },
+  {
+    "ticker": "USIM5.SA",
+    "codigo": "USIM5",
+    "nome": "USINAS SID DE MINAS GERAIS S.A.-USIMINAS",
+    "classe": "PNA"
+  },
+  {
+    "ticker": "USIM6.SA",
+    "codigo": "USIM6",
+    "nome": "USINAS SID DE MINAS GERAIS S.A.-USIMINAS",
+    "classe": "PNB"
+  },
+  {
+    "ticker": "VALE3.SA",
+    "codigo": "VALE3",
+    "nome": "VALE S.A.",
+    "classe": "ON"
+  },
+  {
+    "ticker": "VAMO3.SA",
+    "codigo": "VAMO3",
+    "nome": "VAMOS LOCAÇÃO DE CAMINHÕES. MÁQUINAS E EQUIP. S.A.",
+    "classe": "ON"
+  },
+  {
+    "ticker": "VBBR3.SA",
+    "codigo": "VBBR3",
+    "nome": "VIBRA ENERGIA S.A.",
+    "classe": "ON"
+  },
+  {
+    "ticker": "VITT3.SA",
+    "codigo": "VITT3",
+    "nome": "VITTIA S.A.",
+    "classe": "ON"
+  },
+  {
+    "ticker": "VIVA3.SA",
+    "codigo": "VIVA3",
+    "nome": "VIVARA PARTICIPAÇOES S.A",
+    "classe": "ON"
+  },
+  {
+    "ticker": "VIVR3.SA",
+    "codigo": "VIVR3",
+    "nome": "VIVER INCORPORADORA E CONSTRUTORA S.A.",
+    "classe": "ON"
+  },
+  {
+    "ticker": "VIVT3.SA",
+    "codigo": "VIVT3",
+    "nome": "TELEFÔNICA BRASIL S.A",
+    "classe": "ON"
+  },
+  {
+    "ticker": "VLID3.SA",
+    "codigo": "VLID3",
+    "nome": "VALID SOLUÇÕES S.A.",
+    "classe": "ON"
+  },
+  {
+    "ticker": "VSTE3.SA",
+    "codigo": "VSTE3",
+    "nome": "VESTE S.A. ESTILO",
+    "classe": "ON"
+  },
+  {
+    "ticker": "VTRU3.SA",
+    "codigo": "VTRU3",
+    "nome": "VITRU EDUCAÇÃO S.A",
+    "classe": "ON"
+  },
+  {
+    "ticker": "VULC3.SA",
+    "codigo": "VULC3",
+    "nome": "VULCABRAS S.A.",
+    "classe": "ON"
+  },
+  {
+    "ticker": "VVEO3.SA",
+    "codigo": "VVEO3",
+    "nome": "CM HOSPITALAR S.A.",
+    "classe": "ON"
+  },
+  {
+    "ticker": "WDCN3.SA",
+    "codigo": "WDCN3",
+    "nome": "WDCN3",
+    "classe": "ON"
+  },
+  {
+    "ticker": "WEGE3.SA",
+    "codigo": "WEGE3",
+    "nome": "WEG S.A.",
+    "classe": "ON"
+  },
+  {
+    "ticker": "WEST3.SA",
+    "codigo": "WEST3",
+    "nome": "WESTWING COMERCIO VAREJISTA S.A.",
+    "classe": "ON"
+  },
+  {
+    "ticker": "WHRL3.SA",
+    "codigo": "WHRL3",
+    "nome": "WHIRLPOOL S.A.",
+    "classe": "ON"
+  },
+  {
+    "ticker": "WHRL4.SA",
+    "codigo": "WHRL4",
+    "nome": "WHIRLPOOL S.A.",
+    "classe": "PN"
+  },
+  {
+    "ticker": "WIZC3.SA",
+    "codigo": "WIZC3",
+    "nome": "WIZ CO PARTICIPAÇÕES E CORRETAGEM DE SEGUROS S.A.",
+    "classe": "ON"
+  },
+  {
+    "ticker": "WLMM4.SA",
+    "codigo": "WLMM4",
+    "nome": "WLM PART. E COMÉRCIO DE MÁQUINAS E VEÍCULOS S.A.",
+    "classe": "PN"
+  },
+  {
+    "ticker": "YDUQ3.SA",
+    "codigo": "YDUQ3",
+    "nome": "YDUQS PARTICIPACOES S.A.",
+    "classe": "ON"
+  }
+]

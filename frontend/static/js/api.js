@@ -120,6 +120,49 @@ const APIService = {
         return perfilNormalizado;
     },
 
+    async analisarCarteira(
+        tickers,
+        periodo = '1y',
+        perfil = 'moderado'
+    ) {
+        const tickersValidos =
+            this.validarTickers(
+                tickers,
+                2
+            );
+
+        const periodoValido =
+            this.validarPeriodo(
+                periodo
+            );
+
+        const perfilValido =
+            this.validarPerfil(
+                perfil
+            );
+
+        const resposta = await fetch(
+            `${API_BASE}/analisar-carteira/`,
+            {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                },
+                body: JSON.stringify({
+                    tickers: tickersValidos,
+                    periodo: periodoValido,
+                    perfil: perfilValido
+                })
+            }
+        );
+
+        return this.processarResposta(
+            resposta,
+            'Não foi possível analisar a carteira.'
+        );
+    },
+
     async otimizarCarteira(
         tickers,
         periodo = '1y',

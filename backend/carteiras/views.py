@@ -1251,6 +1251,10 @@ def gerar_historico_comparativo(
     """
     Gera o desempenho histórico real da carteira
     e do Ibovespa, ambos normalizados em base 100.
+
+    A série começa em 100 antes do primeiro retorno.
+    Assim, o primeiro retorno observado não é apagado
+    pela normalização.
     """
     if (
         retornos_ativos is None
@@ -1284,26 +1288,37 @@ def gerar_historico_comparativo(
 
     desempenho_carteira = (
         1.0 + dados["carteira"]
-    ).cumprod()
+    ).cumprod() * 100.0
+
     desempenho_ibovespa = (
         1.0 + dados["ibovespa"]
-    ).cumprod()
+    ).cumprod() * 100.0
 
-    desempenho_carteira = (
+    data_inicial = (
+        dados.index[0]
+        - pd.Timedelta(days=1)
+    )
+
+    desempenho_carteira = pd.concat([
+        pd.Series(
+            [100.0],
+            index=[data_inicial]
+        ),
         desempenho_carteira
-        / desempenho_carteira.iloc[0]
-        * 100
-    )
-    desempenho_ibovespa = (
+    ])
+
+    desempenho_ibovespa = pd.concat([
+        pd.Series(
+            [100.0],
+            index=[data_inicial]
+        ),
         desempenho_ibovespa
-        / desempenho_ibovespa.iloc[0]
-        * 100
-    )
+    ])
 
     return {
         "meses": [
             data.strftime("%Y-%m-%d")
-            for data in dados.index
+            for data in desempenho_carteira.index
         ],
         "carteira": [
             float(valor)

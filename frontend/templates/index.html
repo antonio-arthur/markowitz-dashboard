@@ -1232,18 +1232,25 @@
                             📊 Performance Comparativa
                         </h3>
 
-                        <div x-show="!historicoDemonstrativo">
+                        <div x-show="historico">
                             <div
                                 id="graficoHistorico"
                                 style="height: 380px;"
                             ></div>
+
+                            <p class="mt-3 text-xs text-gray-400 leading-relaxed">
+                                O desempenho histórico é reconstruído com os pesos
+                                calculados para a carteira no período selecionado.
+                                Não representa um backtest fora da amostra.
+                            </p>
                         </div>
 
                         <div
-                            x-show="historicoDemonstrativo"
+                            x-show="!historico"
                             class="rounded-xl border border-yellow-500/20 bg-yellow-500/10 p-4 text-sm text-yellow-200"
                         >
-                            Simulação ilustrativa — não representa desempenho histórico real.
+                            Não foi possível gerar o desempenho histórico para
+                            o período selecionado.
                         </div>
                     </div>
                 </div>

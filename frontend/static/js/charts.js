@@ -178,12 +178,6 @@
             return;
         }
 
-        /*
-         * Remove mensagens antigas que podem ter ficado
-         * dentro do container antes de uma nova renderização.
-         */
-        elemento.innerHTML = '';
-
         dadosFronteira =
             dadosFronteira &&
             typeof dadosFronteira ===
@@ -1543,15 +1537,12 @@
                     '<extra></extra>'
             },
 
-            // ----------------------------------------------------
-            // I B O V E S P A   —   L I N H A   C O N T Í N U A
-            // ----------------------------------------------------
             {
                 x: meses,
                 y: ibovespa,
 
                 type: 'scatter',
-                mode: 'lines+markers',
+                mode: 'lines',
                 name: 'Ibovespa',
 
                 line: {
@@ -1560,14 +1551,8 @@
 
                     width: 2,
 
-                    shape:
-                        'spline'
-                },
-
-                marker: {
-                    size: 4,
-                    color:
-                        '#f59e0b'
+                    dash:
+                        'dash'
                 },
 
                 hovertemplate:

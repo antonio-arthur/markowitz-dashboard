@@ -122,12 +122,14 @@ class AnalisarCarteiraViewTests(TestCase):
     def setUp(self):
         self.factory = APIRequestFactory()
 
+    @patch('carteiras.views.obter_taxa_livre_risco', return_value=0.10)
     @patch('carteiras.views.baixar_retornos_benchmark')
     @patch('carteiras.views.processar_dados')
     def test_endpoint_agregado_retorna_dados_completos(
         self,
         mock_processar_dados,
         mock_benchmark,
+        _mock_taxa_livre_risco,
     ):
         precos = pd.DataFrame(
             {
@@ -221,6 +223,7 @@ class AnalisarCarteiraViewTests(TestCase):
             0.10,
         )
 
+    @patch('carteiras.views.obter_taxa_livre_risco', return_value=0.10)
     @patch('carteiras.views.simular_carteiras', return_value=[])
     @patch('carteiras.views.calcular_fronteira_eficiente', return_value=[])
     @patch('carteiras.views.selecionar_carteira_por_perfil')
@@ -237,6 +240,7 @@ class AnalisarCarteiraViewTests(TestCase):
         mock_selecionar_carteira_por_perfil,
         _mock_calcular_fronteira,
         _mock_simular_carteiras,
+        _mock_taxa_livre_risco,
     ):
         index = pd.date_range(
             '2024-01-01',

@@ -7,3 +7,4 @@ numpy>=2.0.0
 scipy>=1.13.0
 gunicorn>=21.2.0
 whitenoise>=6.6.0
+requests>=2.31,<3.0

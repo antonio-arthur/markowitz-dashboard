@@ -3,6 +3,8 @@ import logging
 import os
 import unicodedata
 
+import requests
+
 from django.conf import settings
 from django.core.cache import cache
 from rest_framework.views import APIView
@@ -24,7 +26,105 @@ from .serializers import AnaliseCarteiraSerializer
 
 logger = logging.getLogger(__name__)
 
-TAXA_LIVRE_RISCO = float(os.environ.get("TAXA_LIVRE_RISCO", "0.10"))
+# ---- TAXA LIVRE DE RISCO COM FALLBACK E BUSCA AUTOMÁTICA ----
+TAXA_LIVRE_RISCO_PADRAO = float(
+    os.environ.get(
+        "TAXA_LIVRE_RISCO",
+        "0.1425"
+    )
+)
+
+BCB_SERIE_META_SELIC = os.environ.get(
+    "BCB_SERIE_META_SELIC",
+    "432"
+)
+
+BCB_URL_META_SELIC = (
+    "https://api.bcb.gov.br/dados/serie/"
+    f"bcdata.sgs.{BCB_SERIE_META_SELIC}/dados/ultimos/1"
+    "?formato=json"
+)
+
+CACHE_TIMEOUT_TAXA_LIVRE_RISCO = 60 * 60 * 24
+
+
+def obter_taxa_livre_risco():
+    """
+    Busca automaticamente a Meta Selic no Banco Central.
+
+    A API retorna a taxa em percentual, por exemplo:
+    14.25
+
+    O modelo usa a taxa em decimal, por exemplo:
+    0.1425
+    """
+    cache_key = "taxa_livre_risco_meta_selic"
+
+    taxa_em_cache = cache.get(
+        cache_key
+    )
+
+    if taxa_em_cache is not None:
+        return float(
+            taxa_em_cache
+        )
+
+    try:
+        resposta = requests.get(
+            BCB_URL_META_SELIC,
+            timeout=5
+        )
+
+        resposta.raise_for_status()
+
+        dados = resposta.json()
+
+        if (
+            not isinstance(dados, list) or
+            len(dados) == 0
+        ):
+            raise ValueError(
+                "Resposta vazia da API do Banco Central."
+            )
+
+        valor_percentual = float(
+            str(
+                dados[0]["valor"]
+            ).replace(
+                ",",
+                "."
+            )
+        )
+
+        taxa_decimal = (
+            valor_percentual /
+            100.0
+        )
+
+        if (
+            taxa_decimal <= 0 or
+            taxa_decimal > 1
+        ):
+            raise ValueError(
+                "Taxa Selic fora do intervalo esperado."
+            )
+
+        cache.set(
+            cache_key,
+            taxa_decimal,
+            CACHE_TIMEOUT_TAXA_LIVRE_RISCO
+        )
+
+        return taxa_decimal
+
+    except Exception as erro:
+        logger.warning(
+            "Não foi possível buscar a Meta Selic no Banco Central. "
+            "Usando taxa livre de risco padrão.",
+            exc_info=True
+        )
+
+        return TAXA_LIVRE_RISCO_PADRAO
 
 
 def normalizar_texto(texto):
@@ -33,6 +133,8 @@ def normalizar_texto(texto):
         return ""
     texto = str(texto).strip().lower()
     return unicodedata.normalize("NFKD", texto).encode("ascii", "ignore").decode("ascii")
+
+
 BENCHMARK_PADRAO = "^BVSP"
 
 DIAS_UTEIS_ANO = 252
@@ -334,11 +436,14 @@ def calcular_sharpe(
     pesos,
     retorno_medio,
     cov_matrix,
-    taxa_livre_risco=TAXA_LIVRE_RISCO
+    taxa_livre_risco=None
 ):
     """
     Índice de Sharpe anualizado.
     """
+    if taxa_livre_risco is None:
+        taxa_livre_risco = obter_taxa_livre_risco()
+
     retorno = calcular_retorno_carteira(
         pesos,
         retorno_medio
@@ -466,13 +571,15 @@ def otimizar_maximo_sharpe(
     retorno_medio,
     cov_matrix,
     num_ativos,
-    taxa_livre_risco=TAXA_LIVRE_RISCO
+    taxa_livre_risco=None
 ):
     """
     Carteira com maior Índice de Sharpe.
 
     Utilizada para o perfil moderado.
     """
+    if taxa_livre_risco is None:
+        taxa_livre_risco = obter_taxa_livre_risco()
 
     def sharpe_negativo(pesos):
         return -calcular_sharpe(
@@ -1592,6 +1699,9 @@ class OtimizarCarteiraView(APIView):
                 )
             )
 
+            # Taxa livre de risco atualizada
+            taxa_livre_risco = obter_taxa_livre_risco()
+
             # Caso exista apenas um ativo válido.
             if num_ativos == 1:
                 pesos = np.array(
@@ -1614,7 +1724,7 @@ class OtimizarCarteiraView(APIView):
                 sharpe = (
                     (
                         retorno
-                        - TAXA_LIVRE_RISCO
+                        - taxa_livre_risco
                     )
                     / volatilidade
 
@@ -1681,7 +1791,9 @@ class OtimizarCarteiraView(APIView):
                             sharpe
                         ),
                         "pesos": pesos_unico
-                    }
+                    },
+
+                    "taxa_livre_risco": taxa_livre_risco,
                 })
 
             (
@@ -1701,7 +1813,8 @@ class OtimizarCarteiraView(APIView):
             ) = otimizar_maximo_sharpe(
                 retorno_medio,
                 cov_matrix,
-                num_ativos
+                num_ativos,
+                taxa_livre_risco=taxa_livre_risco
             )
 
             if pesos_minimos is None:
@@ -1791,7 +1904,8 @@ class OtimizarCarteiraView(APIView):
             sharpe_selecionado = calcular_sharpe(
                 pesos_selecionados,
                 retorno_medio,
-                cov_matrix
+                cov_matrix,
+                taxa_livre_risco=taxa_livre_risco
             )
 
             beta_selecionado = (
@@ -1805,7 +1919,8 @@ class OtimizarCarteiraView(APIView):
             sharpe_maximo = calcular_sharpe(
                 pesos_sharpe,
                 retorno_medio,
-                cov_matrix
+                cov_matrix,
+                taxa_livre_risco=taxa_livre_risco
             )
 
             return Response({
@@ -1893,7 +2008,9 @@ class OtimizarCarteiraView(APIView):
                         tickers_validos,
                         pesos_sharpe
                     )
-                }
+                },
+
+                "taxa_livre_risco": taxa_livre_risco,
             })
 
         except Exception as erro:
@@ -1946,12 +2063,15 @@ class AnalisarCarteiraView(APIView):
             correlacao = calcular_matriz_correlacao(retornos)
             matriz_correlacao = serializar_matriz_correlacao(correlacao, tickers_validos)
 
+            # Taxa livre de risco atualizada
+            taxa_livre_risco = obter_taxa_livre_risco()
+
             if num_ativos == 1:
                 pesos = np.array([1.0])
                 retorno = float(retorno_medio.iloc[0])
                 volatilidade = float(np.sqrt(cov_matrix.iloc[0, 0]))
                 sharpe = (
-                    (retorno - TAXA_LIVRE_RISCO) / volatilidade
+                    (retorno - taxa_livre_risco) / volatilidade
                     if volatilidade > TOLERANCIA
                     else 0.0
                 )
@@ -1985,7 +2105,7 @@ class AnalisarCarteiraView(APIView):
                     "precos": {ticker: float(precos[ticker].iloc[-1]) for ticker in tickers_validos if not precos[ticker].empty},
                     "historico": historico,
                     "matriz_correlacao": matriz_correlacao,
-                    "taxa_livre_risco": TAXA_LIVRE_RISCO,
+                    "taxa_livre_risco": taxa_livre_risco,
                 })
 
             (
@@ -1997,7 +2117,7 @@ class AnalisarCarteiraView(APIView):
                 pesos_sharpe,
                 retorno_sharpe,
                 volatilidade_sharpe,
-            ) = otimizar_maximo_sharpe(retorno_medio, cov_matrix, num_ativos)
+            ) = otimizar_maximo_sharpe(retorno_medio, cov_matrix, num_ativos, taxa_livre_risco=taxa_livre_risco)
 
             if pesos_minimos is None or pesos_sharpe is None:
                 return Response({"erro": "Falha ao calcular a otimização da carteira."}, status=status.HTTP_400_BAD_REQUEST)
@@ -2016,9 +2136,9 @@ class AnalisarCarteiraView(APIView):
             pesos_selecionados = limpar_pesos(carteira_perfil['pesos'])
             retorno_selecionado = float(carteira_perfil['retorno'])
             volatilidade_selecionada = float(carteira_perfil['volatilidade'])
-            sharpe_selecionado = calcular_sharpe(pesos_selecionados, retorno_medio, cov_matrix)
+            sharpe_selecionado = calcular_sharpe(pesos_selecionados, retorno_medio, cov_matrix, taxa_livre_risco=taxa_livre_risco)
             beta_selecionado = calcular_beta_carteira(pesos_selecionados, retornos, retornos_mercado)
-            sharpe_maximo = calcular_sharpe(pesos_sharpe, retorno_medio, cov_matrix)
+            sharpe_maximo = calcular_sharpe(pesos_sharpe, retorno_medio, cov_matrix, taxa_livre_risco=taxa_livre_risco)
 
             fronteira_eficiente = calcular_fronteira_eficiente(retorno_medio, cov_matrix, num_ativos)
             carteiras_simuladas = simular_carteiras(retorno_medio, cov_matrix, num_ativos)
@@ -2080,7 +2200,7 @@ class AnalisarCarteiraView(APIView):
                 'precos': precos_atuais,
                 'historico': historico,
                 'matriz_correlacao': matriz_correlacao,
-                'taxa_livre_risco': TAXA_LIVRE_RISCO,
+                'taxa_livre_risco': taxa_livre_risco,
             })
         except ValueError as erro:
             logger.warning('Erro de validação na análise da carteira: %s', erro)

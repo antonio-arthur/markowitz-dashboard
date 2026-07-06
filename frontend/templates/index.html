@@ -1,1366 +1,580 @@
 ﻿<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Markowitz Analytics | Otimização de Carteiras</title>
 
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1.0"
-    >
+  <!-- Fontes -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 
-    <title>
-        Markowitz Analytics | Otimização de Carteiras
-    </title>
+  <!-- Tailwind -->
+  <script src="https://cdn.tailwindcss.com"></script>
 
-    <!-- Fontes -->
-    <link
-        rel="preconnect"
-        href="https://fonts.googleapis.com"
-    >
+  <!-- Alpine.js -->
+  <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.13.5/dist/cdn.min.js"></script>
 
-    <link
-        rel="preconnect"
-        href="https://fonts.gstatic.com"
-        crossorigin
-    >
+  <!-- Plotly -->
+  <script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
 
-    <link
-        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap"
-        rel="stylesheet"
-    >
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 
-    <!-- Tailwind -->
-    <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    [x-cloak] {
+      display: none !important;
+    }
 
-    <!-- Alpine.js -->
-    <script
-        defer
-        src="https://cdn.jsdelivr.net/npm/alpinejs@3.13.5/dist/cdn.min.js"
-    ></script>
+    * {
+      box-sizing: border-box;
+      font-family: 'Inter', sans-serif;
+    }
 
-    <!-- Plotly -->
-    <script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
+    html {
+      scroll-behavior: smooth;
+    }
 
-    <!-- Chart.js -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: #0a0e27;
+      color: #e2e8f0;
+      overflow-x: hidden;
+    }
 
-    <style>
-        [x-cloak] {
-            display: none !important;
-        }
+    .font-mono {
+      font-family: 'JetBrains Mono', monospace;
+    }
 
-        * {
-            box-sizing: border-box;
-            font-family: 'Inter', sans-serif;
-        }
+    .sidebar {
+      background: linear-gradient(180deg, #0f1729 0%, #1a1f3a 100%);
+      border-right: 1px solid rgba(255, 255, 255, 0.05);
+    }
 
-        html {
-            scroll-behavior: smooth;
-        }
+    .card {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      backdrop-filter: blur(10px);
+      border-radius: 16px;
+      transition: background 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+    }
 
-        body {
-            margin: 0;
-            min-height: 100vh;
-            background: #0a0e27;
-            color: #e2e8f0;
-            overflow-x: hidden;
-        }
+    .card:hover {
+      background: rgba(255, 255, 255, 0.05);
+      border-color: rgba(255, 255, 255, 0.10);
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.30);
+    }
 
-        .font-mono {
-            font-family: 'JetBrains Mono', monospace;
-        }
+    .btn-primary {
+      background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+      border: none;
+      transition: background 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+    }
 
-        .sidebar {
-            background: linear-gradient(
-                180deg,
-                #0f1729 0%,
-                #1a1f3a 100%
-            );
+    .btn-primary:hover:not(:disabled) {
+      background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+      box-shadow: 0 4px 15px rgba(59, 130, 246, 0.40);
+      transform: translateY(-1px);
+    }
 
-            border-right: 1px solid rgba(255, 255, 255, 0.05);
-        }
+    .btn-primary:disabled {
+      background: #374151;
+      cursor: not-allowed;
+      transform: none;
+      box-shadow: none;
+      opacity: 0.70;
+    }
 
-        .card {
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid rgba(255, 255, 255, 0.06);
-            backdrop-filter: blur(10px);
-            border-radius: 16px;
+    .profile-btn {
+      transition: all 0.3s ease;
+      border: 2px solid transparent;
+    }
 
-            transition:
-                background 0.3s ease,
-                border-color 0.3s ease,
-                box-shadow 0.3s ease;
-        }
+    .profile-btn.active {
+      border-color: #3b82f6;
+      background: rgba(59, 130, 246, 0.10);
+      color: #ffffff;
+    }
 
-        .card:hover {
-            background: rgba(255, 255, 255, 0.05);
-            border-color: rgba(255, 255, 255, 0.10);
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.30);
-        }
+    .asset-toggle {
+      transition: all 0.2s ease;
+      cursor: pointer;
+    }
 
-        .btn-primary {
-            background: linear-gradient(
-                135deg,
-                #3b82f6 0%,
-                #2563eb 100%
-            );
+    .asset-toggle:hover {
+      background: rgba(255, 255, 255, 0.05);
+    }
 
-            border: none;
+    .asset-toggle.selected {
+      background: rgba(16, 185, 129, 0.10);
+      border-color: rgba(16, 185, 129, 0.30);
+    }
 
-            transition:
-                background 0.3s ease,
-                transform 0.3s ease,
-                box-shadow 0.3s ease;
-        }
+    .progress-bar {
+      background: linear-gradient(90deg, #3b82f6 0%, #8b5cf6 100%);
+      transition: width 1s ease;
+    }
 
-        .btn-primary:hover:not(:disabled) {
-            background: linear-gradient(
-                135deg,
-                #2563eb 0%,
-                #1d4ed8 100%
-            );
+    .spinner {
+      border: 3px solid rgba(255, 255, 255, 0.10);
+      border-top-color: #3b82f6;
+      border-radius: 50%;
+      width: 24px;
+      height: 24px;
+      animation: spin 0.8s linear infinite;
+    }
 
-            box-shadow: 0 4px 15px rgba(59, 130, 246, 0.40);
-            transform: translateY(-1px);
-        }
+    @keyframes spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
 
-        .btn-primary:disabled {
-            background: #374151;
-            cursor: not-allowed;
-            transform: none;
-            box-shadow: none;
-            opacity: 0.70;
-        }
+    .fade-in {
+      animation: fadeIn 0.5s ease-out;
+    }
 
-        .profile-btn {
-            transition: all 0.3s ease;
-            border: 2px solid transparent;
-        }
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
 
-        .profile-btn.active {
-            border-color: #3b82f6;
-            background: rgba(59, 130, 246, 0.10);
-            color: #ffffff;
-        }
+    ::-webkit-scrollbar {
+      width: 7px;
+      height: 7px;
+    }
 
-        .asset-toggle {
-            transition: all 0.2s ease;
-            cursor: pointer;
-        }
+    ::-webkit-scrollbar-track {
+      background: rgba(255, 255, 255, 0.02);
+    }
 
-        .asset-toggle:hover {
-            background: rgba(255, 255, 255, 0.05);
-        }
+    ::-webkit-scrollbar-thumb {
+      background: rgba(255, 255, 255, 0.14);
+      border-radius: 6px;
+    }
 
-        .asset-toggle.selected {
-            background: rgba(16, 185, 129, 0.10);
-            border-color: rgba(16, 185, 129, 0.30);
-        }
+    ::-webkit-scrollbar-thumb:hover {
+      background: rgba(255, 255, 255, 0.24);
+    }
 
-        .progress-bar {
-            background: linear-gradient(
-                90deg,
-                #3b82f6 0%,
-                #8b5cf6 100%
-            );
+    input[type="range"] {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 100%;
+      height: 6px;
+      background: rgba(255, 255, 255, 0.10);
+      border-radius: 3px;
+      outline: none;
+    }
 
-            transition: width 1s ease;
-        }
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 18px;
+      height: 18px;
+      background: #3b82f6;
+      border-radius: 50%;
+      cursor: pointer;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
 
-        .spinner {
-            border: 3px solid rgba(255, 255, 255, 0.10);
-            border-top-color: #3b82f6;
-            border-radius: 50%;
-            width: 24px;
-            height: 24px;
-            animation: spin 0.8s linear infinite;
-        }
+    input[type="range"]::-webkit-slider-thumb:hover {
+      transform: scale(1.20);
+      box-shadow: 0 0 15px rgba(59, 130, 246, 0.50);
+    }
 
-        @keyframes spin {
-            to {
-                transform: rotate(360deg);
-            }
-        }
+    input[type="number"],
+    select {
+      color-scheme: dark;
+    }
 
-        .fade-in {
-            animation: fadeIn 0.5s ease-out;
-        }
+    table {
+      border-collapse: collapse;
+    }
 
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(10px);
-            }
-
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        ::-webkit-scrollbar {
-            width: 7px;
-            height: 7px;
-        }
-
-        ::-webkit-scrollbar-track {
-            background: rgba(255, 255, 255, 0.02);
-        }
-
-        ::-webkit-scrollbar-thumb {
-            background: rgba(255, 255, 255, 0.14);
-            border-radius: 6px;
-        }
-
-        ::-webkit-scrollbar-thumb:hover {
-            background: rgba(255, 255, 255, 0.24);
-        }
-
-        input[type="range"] {
-            -webkit-appearance: none;
-            appearance: none;
-            width: 100%;
-            height: 6px;
-            background: rgba(255, 255, 255, 0.10);
-            border-radius: 3px;
-            outline: none;
-        }
-
-        input[type="range"]::-webkit-slider-thumb {
-            -webkit-appearance: none;
-            appearance: none;
-            width: 18px;
-            height: 18px;
-            background: #3b82f6;
-            border-radius: 50%;
-            cursor: pointer;
-
-            transition:
-                transform 0.2s ease,
-                box-shadow 0.2s ease;
-        }
-
-        input[type="range"]::-webkit-slider-thumb:hover {
-            transform: scale(1.20);
-            box-shadow: 0 0 15px rgba(59, 130, 246, 0.50);
-        }
-
-        input[type="number"],
-        select {
-            color-scheme: dark;
-        }
-
-        table {
-            border-collapse: collapse;
-        }
-
-        @media (min-width: 1024px) {
-            .sidebar-desktop {
-                position: sticky;
-                top: 0;
-                height: 100vh;
-                overflow-y: auto;
-            }
-        }
-    </style>
+    @media (min-width: 1024px) {
+      .sidebar-desktop {
+        position: sticky;
+        top: 0;
+        height: 100vh;
+        overflow-y: auto;
+      }
+    }
+  </style>
 </head>
 
 <body>
-    <div
-        x-data="dashboardApp()"
-        x-init="init()"
-        class="flex flex-col lg:flex-row min-h-screen w-full items-start"
-    >
-        <!-- SIDEBAR -->
-        <aside
-            class="sidebar sidebar-desktop w-full lg:w-80 p-6 flex flex-col gap-6 flex-shrink-0"
-        >
-            <!-- Logo -->
-            <div class="flex items-center gap-3 mb-2">
-                <div
-                    class="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl flex items-center justify-center"
-                >
-                    <svg
-                        class="w-6 h-6 text-white"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                    >
-                        <path
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                            stroke-width="2"
-                            d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"
-                        ></path>
-                    </svg>
-                </div>
+  <div x-data="dashboardApp()" x-init="init()" class="flex flex-col lg:flex-row min-h-screen w-full items-start">
+    <!-- SIDEBAR -->
+    <aside class="sidebar sidebar-desktop w-full lg:w-80 p-6 flex flex-col gap-6 flex-shrink-0">
+      <!-- Logo -->
+      <div class="flex items-center gap-3 mb-2">
+        <div class="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl flex items-center justify-center">
+          <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path>
+          </svg>
+        </div>
+        <div>
+          <h1 class="text-lg font-bold text-white">Markowitz</h1>
+          <p class="text-xs text-gray-400">Analytics Pro</p>
+        </div>
+      </div>
 
-                <div>
-                    <h1 class="text-lg font-bold text-white">
-                        Markowitz
-                    </h1>
+      <!-- Perfil -->
+      <div class="card p-4">
+        <h3 class="text-sm font-semibold text-gray-300 mb-3">Perfil do Investidor</h3>
+        <div class="grid grid-cols-1 gap-2">
+          <button type="button" @click="perfil = 'conservador'" :class="{'active': perfil === 'conservador'}" class="profile-btn py-2 px-3 rounded-lg text-xs font-medium text-gray-300 hover:text-white">Conservador</button>
+          <button type="button" @click="perfil = 'moderado'" :class="{'active': perfil === 'moderado'}" class="profile-btn py-2 px-3 rounded-lg text-xs font-medium text-gray-300 hover:text-white">Moderado</button>
+          <button type="button" @click="perfil = 'arrojado'" :class="{'active': perfil === 'arrojado'}" class="profile-btn py-2 px-3 rounded-lg text-xs font-medium text-gray-300 hover:text-white">Arrojado</button>
+        </div>
+      </div>
 
-                    <p class="text-xs text-gray-400">
-                        Analytics Pro
-                    </p>
-                </div>
-            </div>
+      <!-- Valor -->
+      <div class="card p-4">
+        <h3 class="text-sm font-semibold text-gray-300 mb-3">Valor a Investir</h3>
+        <div class="relative">
+          <span class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">R$</span>
+          <input type="number" x-model.number="valorInvestir" class="w-full bg-transparent border border-gray-600 rounded-lg py-2 pl-10 pr-4 text-white font-mono focus:border-blue-500 focus:outline-none" placeholder="10000" step="100" min="1">
+        </div>
+      </div>
 
-            <!-- Perfil -->
-            <div class="card p-4">
-                <h3 class="text-sm font-semibold text-gray-300 mb-3">
-                    Perfil do Investidor
-                </h3>
+      <!-- Período -->
+      <div class="card p-4">
+        <h3 class="text-sm font-semibold text-gray-300 mb-3">Período da Análise</h3>
+        <select x-model="periodoAnalise" class="w-full bg-[#11182f] border border-gray-600 rounded-lg py-2 px-3 text-white focus:border-blue-500 focus:outline-none">
+          <option value="1mo">Último mês</option>
+          <option value="3mo">Últimos 3 meses</option>
+          <option value="6mo">Últimos 6 meses</option>
+          <option value="1y">Últimos 12 meses</option>
+          <option value="2y">Últimos 2 anos</option>
+          <option value="5y">Últimos 5 anos</option>
+          <option value="10y">Últimos 10 anos</option>
+        </select>
+      </div>
 
-                <div class="grid grid-cols-1 gap-2">
-                    <button
-                        type="button"
-                        @click="perfil = 'conservador'"
-                        :class="{'active': perfil === 'conservador'}"
-                        class="profile-btn py-2 px-3 rounded-lg text-xs font-medium text-gray-300 hover:text-white"
-                    >
-                        Conservador
-                    </button>
+      <!-- Horizonte -->
+      <div class="card p-4">
+        <h3 class="text-sm font-semibold text-gray-300 mb-3">
+          Horizonte:
+          <span class="text-blue-400 font-mono" x-text="horizonte + ' anos'"></span>
+        </h3>
+        <input type="range" x-model.number="horizonte" min="1" max="20">
+        <div class="flex justify-between text-xs text-gray-500 mt-1">
+          <span>1 ano</span>
+          <span>20 anos</span>
+        </div>
+      </div>
 
-                    <button
-                        type="button"
-                        @click="perfil = 'moderado'"
-                        :class="{'active': perfil === 'moderado'}"
-                        class="profile-btn py-2 px-3 rounded-lg text-xs font-medium text-gray-300 hover:text-white"
-                    >
-                        Moderado
-                    </button>
-
-                    <button
-                        type="button"
-                        @click="perfil = 'arrojado'"
-                        :class="{'active': perfil === 'arrojado'}"
-                        class="profile-btn py-2 px-3 rounded-lg text-xs font-medium text-gray-300 hover:text-white"
-                    >
-                        Arrojado
-                    </button>
-                </div>
-            </div>
-
-            <!-- Valor -->
-            <div class="card p-4">
-                <h3 class="text-sm font-semibold text-gray-300 mb-3">
-                    Valor a Investir
-                </h3>
-
-                <div class="relative">
-                    <span
-                        class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
-                    >
-                        R$
-                    </span>
-
-                    <input
-                        type="number"
-                        x-model.number="valorInvestir"
-                        class="w-full bg-transparent border border-gray-600 rounded-lg py-2 pl-10 pr-4 text-white font-mono focus:border-blue-500 focus:outline-none"
-                        placeholder="10000"
-                        step="100"
-                        min="1"
-                    >
-                </div>
-            </div>
-
-            <!-- Período -->
-            <div class="card p-4">
-                <h3 class="text-sm font-semibold text-gray-300 mb-3">
-                    Período da Análise
-                </h3>
-
-                <select
-                    x-model="periodoAnalise"
-                    class="w-full bg-[#11182f] border border-gray-600 rounded-lg py-2 px-3 text-white focus:border-blue-500 focus:outline-none"
-                >
-                    <option value="1mo">
-                        Último mês
-                    </option>
-
-                    <option value="3mo">
-                        Últimos 3 meses
-                    </option>
-
-                    <option value="6mo">
-                        Últimos 6 meses
-                    </option>
-
-                    <option value="1y">
-                        Últimos 12 meses
-                    </option>
-
-                    <option value="2y">
-                        Últimos 2 anos
-                    </option>
-
-                    <option value="5y">
-                        Últimos 5 anos
-                    </option>
-
-                    <option value="10y">
-                        Últimos 10 anos
-                    </option>
-                </select>
-            </div>
-
-            <!-- Horizonte -->
-            <div class="card p-4">
-                <h3 class="text-sm font-semibold text-gray-300 mb-3">
-                    Horizonte:
-
-                    <span
-                        class="text-blue-400 font-mono"
-                        x-text="horizonte + ' anos'"
-                    ></span>
-                </h3>
-
-                <input
-                    type="range"
-                    x-model.number="horizonte"
-                    min="1"
-                    max="20"
-                >
-
-                <div class="flex justify-between text-xs text-gray-500 mt-1">
-                    <span>
-                        1 ano
-                    </span>
-
-                    <span>
-                        20 anos
-                    </span>
-                </div>
-            </div>
-
-            <!-- Ativos -->
-            <div class="card p-4">
-                <div class="flex items-center justify-between mb-3">
-                    <h3 class="text-sm font-semibold text-gray-300">
-                        Ativos Disponíveis
-                    </h3>
-
-                    <span
-                        class="text-xs text-blue-400 font-mono"
-                        x-text="ativosSelecionados.length + ' selecionados'"
-                    ></span>
-                </div>
-
-                <div class="space-y-2">
-                    <div class="mb-3">
-                        <label class="block text-xs uppercase tracking-wide text-gray-500 mb-2">
-                            Pesquisar ação por código ou empresa
-                        </label>
-                        <input
-                            type="text"
-                            x-model.debounce.250ms="buscaAtivo"
-                            @input.debounce.300ms="buscarAcoes()"
-                            @keydown.enter.prevent="buscarAcoes()"
-                            placeholder="Ex.: petr, vale"
-                            class="w-full rounded-xl border border-gray-700 bg-gray-950/80 px-3 py-2.5 text-sm text-white shadow-sm outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20"
-                        >
-                        <button
-                            type="button"
-                            @click="buscarAcoes()"
-                            :disabled="carregandoCatalogo || buscaAtivo.trim().length < 1"
-                            class="mt-2 w-full rounded-xl border border-blue-500/30 bg-blue-500/10 px-3 py-2 text-sm font-medium text-blue-300 transition hover:bg-blue-500/20"
-                        >
-                            <span x-show="!carregandoCatalogo">Buscar</span>
-                            <span x-show="carregandoCatalogo">Buscando...</span>
-                        </button>
-
-                        <p class="mt-2 text-[11px] text-gray-500">
-                            Adicione manualmente pelo menos 2 ativos para gerar a análise.
-                        </p>
-
-                        <div
-                            x-show="sugestoesAcoes.length > 0"
-                            class="mt-2 rounded-xl border border-gray-700 bg-gray-950/95 p-2 shadow-2xl"
-                        >
-                            <template x-for="acao in sugestoesAcoes" :key="acao.ticker">
-                                <button
-                                    type="button"
-                                    @click="selecionarSugestao(acao)"
-                                    :class="acao.jaAdicionado ? 'border border-emerald-500/30 bg-emerald-500/10' : 'hover:bg-gray-800'"
-                                    class="flex w-full items-start justify-between rounded-lg px-2 py-2 text-left text-sm text-gray-200"
-                                >
-                                    <span class="flex-1">
-                                        <span class="font-semibold text-white" x-text="acao.codigo"></span>
-                                        <span class="block text-xs text-gray-400" x-text="acao.nome"></span>
-                                    </span>
-                                    <span class="ml-3 flex flex-col items-end gap-1">
-                                        <span class="text-xs text-blue-400" x-text="acao.classe"></span>
-                                        <span
-                                            class="text-[11px]"
-                                            :class="acao.jaAdicionado ? 'text-emerald-400' : 'text-gray-500'"
-                                            x-text="acao.jaAdicionado ? 'Adicionado' : 'Adicionar'"
-                                        ></span>
-                                    </span>
-                                </button>
-                            </template>
-                        </div>
-                    </div>
-
-                    <template
-                        x-for="(ativo, index) in ativosVisiveis"
-                        :key="ativo.ticker"
-                    >
-                        <div
-                            @click="toggleAtivo(index)"
-                            :class="{'selected': ativo.selecionado}"
-                            class="asset-toggle flex items-center justify-between p-3 rounded-lg border border-gray-700"
-                        >
-                            <div class="flex items-center gap-3">
-                                <div
-                                    class="w-8 h-8 rounded-lg bg-gray-700 flex items-center justify-center text-xs font-bold"
-                                    x-text="ativo.ticker.substring(0, 2)"
-                                ></div>
-
-                                <div>
-                                    <p
-                                        class="text-sm font-medium text-white"
-                                        x-text="ativo.ticker.replace('.SA', '')"
-                                    ></p>
-
-                                    <p
-                                        class="text-xs text-gray-400"
-                                        x-text="ativo.nome"
-                                    ></p>
-                                </div>
-                            </div>
-
-                            <div
-                                x-show="ativo.selecionado"
-                                class="text-green-400"
-                            >
-                                <svg
-                                    class="w-5 h-5"
-                                    fill="currentColor"
-                                    viewBox="0 0 20 20"
-                                >
-                                    <path
-                                        fill-rule="evenodd"
-                                        clip-rule="evenodd"
-                                        d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                                    ></path>
-                                </svg>
-                            </div>
-                        </div>
-                    </template>
-                </div>
-            </div>
-
-            <!-- Botão -->
-            <button
-                type="button"
-                @click="gerarCarteira()"
-                :disabled="carregando || ativosSelecionados.length < 2"
-                class="btn-primary w-full py-3 rounded-xl font-semibold text-white flex items-center justify-center gap-2"
-            >
-                <div
-                    x-show="carregando"
-                    class="spinner"
-                ></div>
-
-                <span
-                    x-text="
-                        carregando
-                            ? 'Otimizando...'
-                            : 'Gerar Carteira Ótima'
-                    "
-                ></span>
+      <!-- Ativos -->
+      <div class="card p-4">
+        <div class="flex items-center justify-between mb-3">
+          <h3 class="text-sm font-semibold text-gray-300">Ativos Disponíveis</h3>
+          <span class="text-xs text-blue-400 font-mono" x-text="ativosSelecionados.length + ' selecionados'"></span>
+        </div>
+        <div class="space-y-2">
+          <div class="mb-3">
+            <label class="block text-xs uppercase tracking-wide text-gray-500 mb-2">Pesquisar ação por código ou empresa</label>
+            <input type="text" x-model.debounce.250ms="buscaAtivo" @input.debounce.300ms="buscarAcoes()" @keydown.enter.prevent="buscarAcoes()" placeholder="Ex.: petr, vale" class="w-full rounded-xl border border-gray-700 bg-gray-950/80 px-3 py-2.5 text-sm text-white shadow-sm outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20">
+            <button type="button" @click="buscarAcoes()" :disabled="carregandoCatalogo || buscaAtivo.trim().length < 1" class="mt-2 w-full rounded-xl border border-blue-500/30 bg-blue-500/10 px-3 py-2 text-sm font-medium text-blue-300 transition hover:bg-blue-500/20">
+              <span x-show="!carregandoCatalogo">Buscar</span>
+              <span x-show="carregandoCatalogo">Buscando...</span>
             </button>
-        </aside>
+            <p class="mt-2 text-[11px] text-gray-500">Adicione manualmente pelo menos 2 ativos para gerar a análise.</p>
+            <div x-show="sugestoesAcoes.length > 0" class="mt-2 rounded-xl border border-gray-700 bg-gray-950/95 p-2 shadow-2xl">
+              <template x-for="acao in sugestoesAcoes" :key="acao.ticker">
+                <button type="button" @click="selecionarSugestao(acao)" :class="acao.jaAdicionado ? 'border border-emerald-500/30 bg-emerald-500/10' : 'hover:bg-gray-800'" class="flex w-full items-start justify-between rounded-lg px-2 py-2 text-left text-sm text-gray-200">
+                  <span class="flex-1">
+                    <span class="font-semibold text-white" x-text="acao.codigo"></span>
+                    <span class="block text-xs text-gray-400" x-text="acao.nome"></span>
+                  </span>
+                  <span class="ml-3 flex flex-col items-end gap-1">
+                    <span class="text-xs text-blue-400" x-text="acao.classe"></span>
+                    <span class="text-[11px]" :class="acao.jaAdicionado ? 'text-emerald-400' : 'text-gray-500'" x-text="acao.jaAdicionado ? 'Adicionado' : 'Adicionar'"></span>
+                  </span>
+                </button>
+              </template>
+            </div>
+          </div>
 
-        <!-- CONTEÚDO PRINCIPAL -->
-        <main class="flex-1 w-full min-w-0 p-4 lg:p-6">
-            <!-- Cabeçalho -->
-            <div
-                class="flex flex-col xl:flex-row xl:items-center xl:justify-between gap-4 mb-6 fade-in"
-            >
+          <template x-for="(ativo, index) in ativosVisiveis" :key="ativo.ticker">
+            <div @click="toggleAtivo(index)" :class="{'selected': ativo.selecionado}" class="asset-toggle flex items-center justify-between p-3 rounded-lg border border-gray-700">
+              <div class="flex items-center gap-3">
+                <div class="w-8 h-8 rounded-lg bg-gray-700 flex items-center justify-center text-xs font-bold" x-text="ativo.ticker.substring(0, 2)"></div>
                 <div>
-                    <h2 class="text-2xl font-bold text-white">
-                        Análise de Carteiras — Teoria de Markowitz
-                    </h2>
-
-                    <div
-                        class="flex flex-wrap items-center gap-3 mt-2 text-sm text-gray-400"
-                    >
-                        <span
-                            x-text="
-                                'Perfil: ' +
-                                perfil.charAt(0).toUpperCase() +
-                                perfil.slice(1)
-                            "
-                        ></span>
-
-                        <span>
-                            •
-                        </span>
-
-                        <span
-                            x-text="'Horizonte: ' + horizonte + ' anos'"
-                        ></span>
-
-                        <span>
-                            •
-                        </span>
-
-                        <span
-                            x-text="descricaoPeriodo(periodoAnalise)"
-                        ></span>
-                    </div>
+                  <p class="text-sm font-medium text-white" x-text="ativo.ticker.replace('.SA', '')"></p>
+                  <p class="text-xs text-gray-400" x-text="ativo.nome"></p>
                 </div>
-
-                <div class="text-left xl:text-right">
-                    <p class="text-xs text-gray-500">
-                        Atualizado em
-                    </p>
-
-                    <p
-                        class="text-sm text-gray-300 font-mono"
-                        x-text="dataAtual"
-                    ></p>
-                </div>
+              </div>
+              <div x-show="ativo.selecionado" class="text-green-400">
+                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                  <path fill-rule="evenodd" clip-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"></path>
+                </svg>
+              </div>
             </div>
+          </template>
+        </div>
+      </div>
 
-            <!-- Erro -->
-            <div
-                x-cloak
-                x-show="erro"
-                class="mb-6 rounded-xl border border-red-500/30 bg-red-500/10 p-4"
-            >
-                <div class="flex items-start gap-3">
-                    <span class="text-red-400">
-                        ⚠
-                    </span>
+      <!-- Botão -->
+      <button type="button" @click="gerarCarteira()" :disabled="carregando || ativosSelecionados.length < 2" class="btn-primary w-full py-3 rounded-xl font-semibold text-white flex items-center justify-center gap-2">
+        <div x-show="carregando" class="spinner"></div>
+        <span x-text="carregando ? 'Otimizando...' : 'Gerar Carteira Ótima'"></span>
+      </button>
+    </aside>
 
-                    <p
-                        class="text-sm text-red-200"
-                        x-text="erro"
-                    ></p>
-                </div>
+    <!-- CONTEÚDO PRINCIPAL -->
+    <main class="flex-1 w-full min-w-0 p-4 lg:p-6">
+      <!-- Cabeçalho -->
+      <div class="flex flex-col xl:flex-row xl:items-center xl:justify-between gap-4 mb-6 fade-in">
+        <div>
+          <h2 class="text-2xl font-bold text-white">Análise de Carteiras — Teoria de Markowitz</h2>
+          <div class="flex flex-wrap items-center gap-3 mt-2 text-sm text-gray-400">
+            <span x-text="'Perfil: ' + perfil.charAt(0).toUpperCase() + perfil.slice(1)"></span>
+            <span>•</span>
+            <span x-text="'Horizonte: ' + horizonte + ' anos'"></span>
+            <span>•</span>
+            <span x-text="descricaoPeriodo(periodoAnalise)"></span>
+          </div>
+        </div>
+        <div class="text-left xl:text-right">
+          <p class="text-xs text-gray-500">Atualizado em</p>
+          <p class="text-sm text-gray-300 font-mono" x-text="dataAtual"></p>
+        </div>
+      </div>
+
+      <!-- Erro -->
+      <div x-cloak x-show="erro" class="mb-6 rounded-xl border border-red-500/30 bg-red-500/10 p-4">
+        <div class="flex items-start gap-3">
+          <span class="text-red-400 text-sm font-bold">Aviso</span>
+          <p class="text-sm text-red-200" x-text="erro"></p>
+        </div>
+      </div>
+
+      <!-- Estado inicial -->
+      <div x-cloak x-show="!resultados && !carregando" class="flex items-center justify-center" style="min-height: 65vh;">
+        <div class="text-center fade-in">
+          <div class="text-8xl mb-6 text-gray-600"></div>
+          <h3 class="text-2xl font-bold text-white mb-2">Comece sua Análise</h3>
+          <p class="text-gray-400">Selecione pelo menos dois ativos e clique em “Gerar Carteira Ótima”.</p>
+        </div>
+      </div>
+
+      <!-- Carregamento -->
+      <div x-cloak x-show="carregando" class="flex items-center justify-center" style="min-height: 65vh;">
+        <div class="text-center">
+          <div class="spinner mx-auto mb-4" style="width: 48px; height: 48px;"></div>
+          <p class="text-lg text-gray-300">Calculando fronteira eficiente...</p>
+          <p class="text-sm text-gray-500 mt-2">Otimizando a carteira com a teoria de Markowitz</p>
+        </div>
+      </div>
+
+      <!-- Resultados -->
+      <div x-cloak x-show="resultados && !carregando" class="space-y-6 fade-in">
+        <!-- Indicadores -->
+        <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
+          <div class="card p-5">
+            <p class="text-xs text-gray-400 mb-1">Retorno Histórico Anualizado</p>
+            <p class="text-2xl font-bold text-green-400 font-mono" x-text="formatarPct(metricas.retorno)"></p>
+            <span class="text-xs mt-2 block" :class="metricas.retorno > taxaLivreRisco ? 'text-green-400' : 'text-yellow-400'" x-text="metricas.retorno > taxaLivreRisco ? 'Acima da taxa livre de risco' : 'Até a taxa livre de risco'"></span>
+          </div>
+
+          <div class="card p-5">
+            <p class="text-xs text-gray-400 mb-1">Volatilidade Anualizada</p>
+            <p class="text-2xl font-bold text-red-400 font-mono" x-text="formatarPct(metricas.volatilidade)"></p>
+            <span class="text-xs mt-2 block" :class="metricas.volatilidade < 0.20 ? 'text-green-400' : 'text-yellow-400'" x-text="metricas.volatilidade < 0.20 ? 'Risco moderado' : 'Risco elevado'"></span>
+          </div>
+
+          <div class="card p-5">
+            <p class="text-xs text-gray-400 mb-1">Índice de Sharpe</p>
+            <p class="text-2xl font-bold text-blue-400 font-mono" x-text="Number(metricas.sharpe).toFixed(2)"></p>
+            <span class="text-xs mt-2 block" :class="metricas.sharpe > 1 ? 'text-green-400' : metricas.sharpe > 0.5 ? 'text-yellow-400' : 'text-red-400'" x-text="metricas.sharpe > 1 ? 'Boa eficiência' : metricas.sharpe > 0.5 ? 'Eficiência intermediária' : 'Baixa eficiência'"></span>
+          </div>
+
+          <div class="card p-5">
+            <p class="text-xs text-gray-400 mb-1">Beta Estimado</p>
+            <p class="text-2xl font-bold text-purple-400 font-mono" x-text="Number(metricas.beta).toFixed(2)"></p>
+            <span class="text-xs mt-2 block" :class="metricas.beta < 0.8 ? 'text-green-400' : metricas.beta < 1.1 ? 'text-yellow-400' : 'text-red-400'" x-text="metricas.beta < 0.8 ? 'Defensiva' : metricas.beta < 1.1 ? 'Próxima ao mercado' : 'Agressiva'"></span>
+          </div>
+        </div>
+
+        <!-- Gráficos -->
+        <div class="grid grid-cols-1 xl:grid-cols-3 gap-6">
+          <div class="xl:col-span-2 card p-5 min-w-0">
+            <h3 class="text-lg font-semibold text-white mb-4">Fronteira Eficiente de Markowitz</h3>
+            <div id="graficoFronteira" style="height: 500px;"></div>
+          </div>
+
+          <div class="card p-5 min-w-0">
+            <h3 class="text-lg font-semibold text-white mb-4">Alocação da Carteira</h3>
+            <div style="height: 500px;">
+              <canvas id="graficoPesos"></canvas>
             </div>
+          </div>
+        </div>
 
-            <!-- Estado inicial -->
-            <div
-                x-cloak
-                x-show="!resultados && !carregando"
-                class="flex items-center justify-center"
-                style="min-height: 65vh;"
-            >
-                <div class="text-center fade-in">
-                    <div class="text-8xl mb-6">
-                        📊
-                    </div>
-
-                    <h3 class="text-2xl font-bold text-white mb-2">
-                        Pronto para Otimizar
-                    </h3>
-
-                    <p class="text-gray-400">
-                        Selecione pelo menos dois ativos e clique em
-                        “Gerar Carteira Ótima”.
-                    </p>
-                </div>
+        <!-- Tabela -->
+        <div class="card p-5">
+          <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-3 mb-5">
+            <div>
+              <h3 class="text-lg font-semibold text-white">Composição Detalhada da Carteira</h3>
+              <p class="text-xs text-gray-400 mt-1">Os ativos com peso zero foram analisados, mas não receberam alocação na carteira ótima.</p>
             </div>
-
-            <!-- Carregamento -->
-            <div
-                x-cloak
-                x-show="carregando"
-                class="flex items-center justify-center"
-                style="min-height: 65vh;"
-            >
-                <div class="text-center">
-                    <div
-                        class="spinner mx-auto mb-4"
-                        style="width: 48px; height: 48px;"
-                    ></div>
-
-                    <p class="text-lg text-gray-300">
-                        Calculando fronteira eficiente...
-                    </p>
-
-                    <p class="text-sm text-gray-500 mt-2">
-                        Otimizando a carteira com a teoria de Markowitz
-                    </p>
-                </div>
+            <div class="text-left lg:text-right">
+              <p class="text-xs text-gray-400">Valor disponível</p>
+              <p class="text-xl font-bold text-white font-mono" x-text="'R$ ' + formatarMoeda(valorInvestir)"></p>
             </div>
+          </div>
 
-            <!-- Resultados -->
-            <div
-                x-cloak
-                x-show="resultados && !carregando"
-                class="space-y-6 fade-in"
-            >
-                <!-- Indicadores -->
-                <div
-                    class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4"
-                >
-                    <div class="card p-5">
-                        <p class="text-xs text-gray-400 mb-1">
-                            Retorno Histórico Anualizado
-                        </p>
+          <div class="overflow-x-auto">
+            <table class="w-full text-sm min-w-[1250px]">
+              <thead>
+                <tr class="border-b border-gray-700">
+                  <th class="text-left py-3 px-4 text-gray-400 font-medium">Ativo</th>
+                  <th class="text-right py-3 px-4 text-gray-400 font-medium">Cotação</th>
+                  <th class="text-left py-3 px-4 text-gray-400 font-medium">Peso</th>
+                  <th class="text-right py-3 px-4 text-gray-400 font-medium">Valor-alvo</th>
+                  <th class="text-center py-3 px-4 text-gray-400 font-medium">Quantidade</th>
+                  <th class="text-right py-3 px-4 text-gray-400 font-medium">Valor efetivo</th>
+                  <th class="text-right py-3 px-4 text-gray-400 font-medium">Saldo</th>
+                  <th class="text-right py-3 px-4 text-gray-400 font-medium">Retorno</th>
+                  <th class="text-right py-3 px-4 text-gray-400 font-medium">Volatilidade</th>
+                  <th class="text-right py-3 px-4 text-gray-400 font-medium">Sharpe</th>
+                </tr>
+              </thead>
 
-                        <p
-                            class="text-2xl font-bold text-green-400 font-mono"
-                            x-text="formatarPct(metricas.retorno)"
-                        ></p>
-
-                        <span
-                            class="text-xs mt-2 block"
-                            :class="
-                                metricas.retorno > 0.10
-                                    ? 'text-green-400'
-                                    : 'text-yellow-400'
-                            "
-                            x-text="
-                                metricas.retorno > 0.10
-                                    ? 'Acima de 10% a.a.'
-                                    : 'Até 10% a.a.'
-                            "
-                        ></span>
-                    </div>
-
-                    <div class="card p-5">
-                        <p class="text-xs text-gray-400 mb-1">
-                            Volatilidade Anualizada
-                        </p>
-
-                        <p
-                            class="text-2xl font-bold text-red-400 font-mono"
-                            x-text="formatarPct(metricas.volatilidade)"
-                        ></p>
-
-                        <span
-                            class="text-xs mt-2 block"
-                            :class="
-                                metricas.volatilidade < 0.20
-                                    ? 'text-green-400'
-                                    : 'text-yellow-400'
-                            "
-                            x-text="
-                                metricas.volatilidade < 0.20
-                                    ? 'Risco moderado'
-                                    : 'Risco elevado'
-                            "
-                        ></span>
-                    </div>
-
-                    <div class="card p-5">
-                        <p class="text-xs text-gray-400 mb-1">
-                            Índice de Sharpe
-                        </p>
-
-                        <p
-                            class="text-2xl font-bold text-blue-400 font-mono"
-                            x-text="Number(metricas.sharpe).toFixed(2)"
-                        ></p>
-
-                        <span
-                            class="text-xs mt-2 block"
-                            :class="
-                                metricas.sharpe > 1
-                                    ? 'text-green-400'
-                                    : metricas.sharpe > 0.5
-                                        ? 'text-yellow-400'
-                                        : 'text-red-400'
-                            "
-                            x-text="
-                                metricas.sharpe > 1
-                                    ? 'Boa eficiência'
-                                    : metricas.sharpe > 0.5
-                                        ? 'Eficiência intermediária'
-                                        : 'Baixa eficiência'
-                            "
-                        ></span>
-                    </div>
-
-                    <div class="card p-5">
-                        <p class="text-xs text-gray-400 mb-1">
-                            Beta Estimado
-                        </p>
-
-                        <p
-                            class="text-2xl font-bold text-purple-400 font-mono"
-                            x-text="Number(metricas.beta).toFixed(2)"
-                        ></p>
-
-                        <span
-                            class="text-xs mt-2 block"
-                            :class="
-                                metricas.beta < 0.8
-                                    ? 'text-green-400'
-                                    : metricas.beta < 1.1
-                                        ? 'text-yellow-400'
-                                        : 'text-red-400'
-                            "
-                            x-text="
-                                metricas.beta < 0.8
-                                    ? 'Defensiva'
-                                    : metricas.beta < 1.1
-                                        ? 'Próxima ao mercado'
-                                        : 'Agressiva'
-                            "
-                        ></span>
-                    </div>
-                </div>
-
-                <!-- Gráficos -->
-                <div
-                    class="grid grid-cols-1 xl:grid-cols-3 gap-6"
-                >
-                    <div class="xl:col-span-2 card p-5 min-w-0">
-                        <h3 class="text-lg font-semibold text-white mb-4">
-                            📈 Fronteira Eficiente de Markowitz
-                        </h3>
-
-                        <div
-                            id="graficoFronteira"
-                            style="height: 500px;"
-                        ></div>
-                    </div>
-
-                    <div class="card p-5 min-w-0">
-                        <h3 class="text-lg font-semibold text-white mb-4">
-                            🍩 Alocação da Carteira
-                        </h3>
-
-                        <div style="height: 500px;">
-                            <canvas id="graficoPesos"></canvas>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Tabela -->
-                <div class="card p-5">
-                    <div
-                        class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-3 mb-5"
-                    >
+              <tbody>
+                <template x-for="(peso, ticker) in pesos" :key="ticker">
+                  <tr class="border-b border-gray-800 hover:bg-gray-800/50 transition" :class="{'opacity-60': Number(peso) <= 0.000001}">
+                    <td class="py-4 px-4">
+                      <div class="flex items-center gap-3">
+                        <div class="w-9 h-9 rounded-lg bg-gray-700 flex items-center justify-center text-xs font-bold text-white" x-text="ticker.substring(0, 2)"></div>
                         <div>
-                            <h3 class="text-lg font-semibold text-white">
-                                📋 Composição Detalhada da Carteira
-                            </h3>
-
-                            <p class="text-xs text-gray-400 mt-1">
-                                Os ativos com peso zero foram analisados, mas
-                                não receberam alocação na carteira ótima.
-                            </p>
+                          <p class="font-medium text-white" x-text="ticker.replace('.SA', '')"></p>
+                          <div class="flex items-center gap-2 mt-1">
+                            <span class="text-xs text-gray-500">B3</span>
+                            <span x-show="Number(peso) <= 0.000001" class="inline-flex rounded-md border border-gray-600 bg-gray-700/60 px-2 py-0.5 text-[10px] font-medium text-gray-300">Sem alocação</span>
+                          </div>
                         </div>
+                      </div>
+                    </td>
 
-                        <div class="text-left lg:text-right">
-                            <p class="text-xs text-gray-400">
-                                Valor disponível
-                            </p>
+                    <td class="py-4 px-4 text-right">
+                      <span class="font-mono text-blue-400 font-semibold" x-text="formatarPrecoAtivo(ticker)"></span>
+                    </td>
 
-                            <p
-                                class="text-xl font-bold text-white font-mono"
-                                x-text="'R$ ' + formatarMoeda(valorInvestir)"
-                            ></p>
+                    <td class="py-4 px-4">
+                      <div class="flex items-center gap-2">
+                        <div class="w-20 bg-gray-700 rounded-full h-2 overflow-hidden">
+                          <div class="progress-bar h-2 rounded-full" :style="'width: ' + Math.min(100, Math.max(0, Number(peso) * 100)) + '%'"></div>
                         </div>
-                    </div>
+                        <span class="font-mono whitespace-nowrap" :class="Number(peso) > 0.000001 ? 'text-gray-300' : 'text-gray-500'" x-text="(Number(peso) * 100).toFixed(2) + '%'"></span>
+                      </div>
+                    </td>
 
-                    <div class="overflow-x-auto">
-                        <table class="w-full text-sm min-w-[1250px]">
-                            <thead>
-                                <tr class="border-b border-gray-700">
-                                    <th
-                                        class="text-left py-3 px-4 text-gray-400 font-medium"
-                                    >
-                                        Ativo
-                                    </th>
+                    <td class="py-4 px-4 text-right">
+                      <span class="font-mono" :class="Number(peso) > 0.000001 ? 'text-green-300' : 'text-gray-500'" x-text="'R$ ' + formatarMoeda(calcularValorAlvo(peso))"></span>
+                    </td>
 
-                                    <th
-                                        class="text-right py-3 px-4 text-gray-400 font-medium"
-                                    >
-                                        Cotação
-                                    </th>
+                    <td class="py-4 px-4 text-center">
+                      <span class="inline-flex min-w-20 justify-center rounded-lg border px-3 py-1 font-mono font-bold" :class="Number(peso) > 0.000001 ? 'border-blue-500/30 bg-blue-500/10 text-blue-300' : 'border-gray-600 bg-gray-700/40 text-gray-400'" x-text="calcularQuantidadeCotas(peso, ticker) + ' un'"></span>
+                    </td>
 
-                                    <th
-                                        class="text-left py-3 px-4 text-gray-400 font-medium"
-                                    >
-                                        Peso
-                                    </th>
+                    <td class="py-4 px-4 text-right">
+                      <span class="font-mono font-semibold" :class="Number(peso) > 0.000001 ? 'text-green-400' : 'text-gray-500'" x-text="'R$ ' + formatarMoeda(calcularValorEfetivo(peso, ticker))"></span>
+                    </td>
 
-                                    <th
-                                        class="text-right py-3 px-4 text-gray-400 font-medium"
-                                    >
-                                        Valor-alvo
-                                    </th>
+                    <td class="py-4 px-4 text-right">
+                      <span class="font-mono" :class="Number(peso) > 0.000001 ? 'text-yellow-400' : 'text-gray-500'" x-text="'R$ ' + formatarMoeda(calcularSaldoAtivo(peso, ticker))"></span>
+                    </td>
 
-                                    <th
-                                        class="text-center py-3 px-4 text-gray-400 font-medium"
-                                    >
-                                        Quantidade
-                                    </th>
+                    <td class="py-4 px-4 text-right">
+                      <span class="font-mono" :class="metricasAtivos[ticker] && metricasAtivos[ticker].retorno > 0.10 ? 'text-green-400' : metricasAtivos[ticker] && metricasAtivos[ticker].retorno >= 0 ? 'text-yellow-400' : 'text-red-400'" x-text="metricasAtivos[ticker] ? formatarPct(metricasAtivos[ticker].retorno) : '-'"></span>
+                    </td>
 
-                                    <th
-                                        class="text-right py-3 px-4 text-gray-400 font-medium"
-                                    >
-                                        Valor efetivo
-                                    </th>
+                    <td class="py-4 px-4 text-right">
+                      <span class="font-mono text-gray-300" x-text="metricasAtivos[ticker] ? formatarPct(metricasAtivos[ticker].volatilidade) : '-'"></span>
+                    </td>
 
-                                    <th
-                                        class="text-right py-3 px-4 text-gray-400 font-medium"
-                                    >
-                                        Saldo
-                                    </th>
+                    <td class="py-4 px-4 text-right">
+                      <span class="font-mono" :class="metricasAtivos[ticker] && metricasAtivos[ticker].sharpe > 1 ? 'text-green-400' : metricasAtivos[ticker] && metricasAtivos[ticker].sharpe > 0.5 ? 'text-yellow-400' : 'text-red-400'" x-text="metricasAtivos[ticker] ? Number(metricasAtivos[ticker].sharpe).toFixed(2) : '-'"></span>
+                    </td>
+                  </tr>
+                </template>
 
-                                    <th
-                                        class="text-right py-3 px-4 text-gray-400 font-medium"
-                                    >
-                                        Retorno
-                                    </th>
+                <tr x-show="Object.keys(pesos).length === 0">
+                  <td colspan="10" class="py-8 text-center text-gray-500">Nenhum ativo foi retornado pela otimização.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
 
-                                    <th
-                                        class="text-right py-3 px-4 text-gray-400 font-medium"
-                                    >
-                                        Volatilidade
-                                    </th>
+        <!-- Correlação e histórico -->
+        <div class="grid grid-cols-1 xl:grid-cols-2 gap-6">
+          <div class="card p-5 min-w-0">
+            <h3 class="text-lg font-semibold text-white mb-4">Matriz de Correlação</h3>
+            <div id="heatmapCorrelacao" style="height: 380px;"></div>
+          </div>
 
-                                    <th
-                                        class="text-right py-3 px-4 text-gray-400 font-medium"
-                                    >
-                                        Sharpe
-                                    </th>
-                                </tr>
-                            </thead>
-
-                            <tbody>
-                                <template
-                                    x-for="(peso, ticker) in pesos"
-                                    :key="ticker"
-                                >
-                                    <tr
-                                        class="border-b border-gray-800 hover:bg-gray-800/50 transition"
-                                        :class="{
-                                            'opacity-60':
-                                                Number(peso) <= 0.000001
-                                        }"
-                                    >
-                                        <!-- Ativo -->
-                                        <td class="py-4 px-4">
-                                            <div class="flex items-center gap-3">
-                                                <div
-                                                    class="w-9 h-9 rounded-lg bg-gray-700 flex items-center justify-center text-xs font-bold text-white"
-                                                    x-text="ticker.substring(0, 2)"
-                                                ></div>
-
-                                                <div>
-                                                    <p
-                                                        class="font-medium text-white"
-                                                        x-text="
-                                                            ticker.replace(
-                                                                '.SA',
-                                                                ''
-                                                            )
-                                                        "
-                                                    ></p>
-
-                                                    <div class="flex items-center gap-2 mt-1">
-                                                        <span class="text-xs text-gray-500">
-                                                            B3
-                                                        </span>
-
-                                                        <span
-                                                            x-show="
-                                                                Number(peso) <=
-                                                                0.000001
-                                                            "
-                                                            class="inline-flex rounded-md border border-gray-600 bg-gray-700/60 px-2 py-0.5 text-[10px] font-medium text-gray-300"
-                                                        >
-                                                            Sem alocação
-                                                        </span>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </td>
-
-                                        <!-- Cotação -->
-                                        <td class="py-4 px-4 text-right">
-                                            <span
-                                                class="font-mono text-blue-400 font-semibold"
-                                                x-text="
-                                                    formatarPrecoAtivo(
-                                                        ticker
-                                                    )
-                                                "
-                                            ></span>
-                                        </td>
-
-                                        <!-- Peso -->
-                                        <td class="py-4 px-4">
-                                            <div class="flex items-center gap-2">
-                                                <div
-                                                    class="w-20 bg-gray-700 rounded-full h-2 overflow-hidden"
-                                                >
-                                                    <div
-                                                        class="progress-bar h-2 rounded-full"
-                                                        :style="
-                                                            'width: ' +
-                                                            Math.min(
-                                                                100,
-                                                                Math.max(
-                                                                    0,
-                                                                    Number(peso) *
-                                                                    100
-                                                                )
-                                                            ) +
-                                                            '%'
-                                                        "
-                                                    ></div>
-                                                </div>
-
-                                                <span
-                                                    class="font-mono whitespace-nowrap"
-                                                    :class="
-                                                        Number(peso) >
-                                                        0.000001
-                                                            ? 'text-gray-300'
-                                                            : 'text-gray-500'
-                                                    "
-                                                    x-text="
-                                                        (
-                                                            Number(peso) *
-                                                            100
-                                                        ).toFixed(2) +
-                                                        '%'
-                                                    "
-                                                ></span>
-                                            </div>
-                                        </td>
-
-                                        <!-- Valor-alvo -->
-                                        <td class="py-4 px-4 text-right">
-                                            <span
-                                                class="font-mono"
-                                                :class="
-                                                    Number(peso) >
-                                                    0.000001
-                                                        ? 'text-green-300'
-                                                        : 'text-gray-500'
-                                                "
-                                                x-text="
-                                                    'R$ ' +
-                                                    formatarMoeda(
-                                                        calcularValorAlvo(
-                                                            peso
-                                                        )
-                                                    )
-                                                "
-                                            ></span>
-                                        </td>
-
-                                        <!-- Quantidade -->
-                                        <td class="py-4 px-4 text-center">
-                                            <span
-                                                class="inline-flex min-w-20 justify-center rounded-lg border px-3 py-1 font-mono font-bold"
-                                                :class="
-                                                    Number(peso) >
-                                                    0.000001
-                                                        ? 'border-blue-500/30 bg-blue-500/10 text-blue-300'
-                                                        : 'border-gray-600 bg-gray-700/40 text-gray-400'
-                                                "
-                                                x-text="
-                                                    calcularQuantidadeCotas(
-                                                        peso,
-                                                        ticker
-                                                    ) +
-                                                    ' un'
-                                                "
-                                            ></span>
-                                        </td>
-
-                                        <!-- Valor efetivo -->
-                                        <td class="py-4 px-4 text-right">
-                                            <span
-                                                class="font-mono font-semibold"
-                                                :class="
-                                                    Number(peso) >
-                                                    0.000001
-                                                        ? 'text-green-400'
-                                                        : 'text-gray-500'
-                                                "
-                                                x-text="
-                                                    'R$ ' +
-                                                    formatarMoeda(
-                                                        calcularValorEfetivo(
-                                                            peso,
-                                                            ticker
-                                                        )
-                                                    )
-                                                "
-                                            ></span>
-                                        </td>
-
-                                        <!-- Saldo -->
-                                        <td class="py-4 px-4 text-right">
-                                            <span
-                                                class="font-mono"
-                                                :class="
-                                                    Number(peso) >
-                                                    0.000001
-                                                        ? 'text-yellow-400'
-                                                        : 'text-gray-500'
-                                                "
-                                                x-text="
-                                                    'R$ ' +
-                                                    formatarMoeda(
-                                                        calcularSaldoAtivo(
-                                                            peso,
-                                                            ticker
-                                                        )
-                                                    )
-                                                "
-                                            ></span>
-                                        </td>
-
-                                        <!-- Retorno -->
-                                        <td class="py-4 px-4 text-right">
-                                            <span
-                                                class="font-mono"
-                                                :class="
-                                                    metricasAtivos[ticker] &&
-                                                    metricasAtivos[ticker]
-                                                        .retorno >
-                                                    0.10
-                                                        ? 'text-green-400'
-                                                        : metricasAtivos[ticker] &&
-                                                          metricasAtivos[ticker]
-                                                              .retorno >=
-                                                          0
-                                                            ? 'text-yellow-400'
-                                                            : 'text-red-400'
-                                                "
-                                                x-text="
-                                                    metricasAtivos[ticker]
-                                                        ? formatarPct(
-                                                            metricasAtivos[
-                                                                ticker
-                                                            ].retorno
-                                                        )
-                                                        : '-'
-                                                "
-                                            ></span>
-                                        </td>
-
-                                        <!-- Volatilidade -->
-                                        <td class="py-4 px-4 text-right">
-                                            <span
-                                                class="font-mono text-gray-300"
-                                                x-text="
-                                                    metricasAtivos[ticker]
-                                                        ? formatarPct(
-                                                            metricasAtivos[
-                                                                ticker
-                                                            ].volatilidade
-                                                        )
-                                                        : '-'
-                                                "
-                                            ></span>
-                                        </td>
-
-                                        <!-- Sharpe -->
-                                        <td class="py-4 px-4 text-right">
-                                            <span
-                                                class="font-mono"
-                                                :class="
-                                                    metricasAtivos[ticker] &&
-                                                    metricasAtivos[ticker]
-                                                        .sharpe >
-                                                    1
-                                                        ? 'text-green-400'
-                                                        : metricasAtivos[ticker] &&
-                                                          metricasAtivos[ticker]
-                                                              .sharpe >
-                                                          0.5
-                                                            ? 'text-yellow-400'
-                                                            : 'text-red-400'
-                                                "
-                                                x-text="
-                                                    metricasAtivos[ticker]
-                                                        ? Number(
-                                                            metricasAtivos[
-                                                                ticker
-                                                            ].sharpe
-                                                        ).toFixed(2)
-                                                        : '-'
-                                                "
-                                            ></span>
-                                        </td>
-                                    </tr>
-                                </template>
-
-                                <tr
-                                    x-show="
-                                        Object.keys(pesos).length === 0
-                                    "
-                                >
-                                    <td
-                                        colspan="10"
-                                        class="py-8 text-center text-gray-500"
-                                    >
-                                        Nenhum ativo foi retornado pela
-                                        otimização.
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-
-                <!-- Correlação e histórico -->
-                <div
-                    class="grid grid-cols-1 xl:grid-cols-2 gap-6"
-                >
-                    <div class="card p-5 min-w-0">
-                        <h3 class="text-lg font-semibold text-white mb-4">
-                            🔥 Matriz de Correlação
-                        </h3>
-
-                        <div
-                            id="heatmapCorrelacao"
-                            style="height: 380px;"
-                        ></div>
-                    </div>
-
-                    <div class="card p-5 min-w-0">
-                        <h3 class="text-lg font-semibold text-white mb-4">
-                            📊 Performance Comparativa
-                        </h3>
-
-                        <div x-show="historico">
-                            <div
-                                id="graficoHistorico"
-                                style="height: 380px;"
-                            ></div>
-
-                            <p class="mt-3 text-xs text-gray-400 leading-relaxed">
-                                O desempenho histórico é reconstruído com os pesos
-                                calculados para a carteira no período selecionado.
-                                Não representa um backtest fora da amostra.
-                            </p>
-                        </div>
-
-                        <div
-                            x-show="!historico"
-                            class="rounded-xl border border-yellow-500/20 bg-yellow-500/10 p-4 text-sm text-yellow-200"
-                        >
-                            Não foi possível gerar o desempenho histórico para
-                            o período selecionado.
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Projeções -->
-                <div class="card p-5">
-                    <h3 class="text-lg font-semibold text-white mb-4">
-                        💰 Projeções Patrimoniais
-                    </h3>
-
-                    <div
-                        class="grid grid-cols-1 md:grid-cols-3 gap-4"
-                    >
-                        <div
-                            class="rounded-xl bg-red-500/10 border border-red-500/20 p-4"
-                        >
-                            <p class="text-xs text-red-300">
-                                Cenário pessimista
-                            </p>
-
-                            <p
-                                class="mt-1 text-xl font-bold text-red-400 font-mono"
-                                x-text="
-                                    'R$ ' +
-                                    formatarMoeda(
-                                        projecaoPessimista
-                                    )
-                                "
-                            ></p>
-                        </div>
-
-                        <div
-                            class="rounded-xl bg-blue-500/10 border border-blue-500/20 p-4"
-                        >
-                            <p class="text-xs text-blue-300">
-                                Cenário esperado
-                            </p>
-
-                            <p
-                                class="mt-1 text-xl font-bold text-blue-400 font-mono"
-                                x-text="
-                                    'R$ ' +
-                                    formatarMoeda(
-                                        projecaoPatrimonial
-                                    )
-                                "
-                            ></p>
-                        </div>
-
-                        <div
-                            class="rounded-xl bg-green-500/10 border border-green-500/20 p-4"
-                        >
-                            <p class="text-xs text-green-300">
-                                Cenário otimista
-                            </p>
-
-                            <p
-                                class="mt-1 text-xl font-bold text-green-400 font-mono"
-                                x-text="
-                                    'R$ ' +
-                                    formatarMoeda(
-                                        projecaoOtimista
-                                    )
-                                "
-                            ></p>
-                        </div>
-                    </div>
-
-                    <p
-                        class="text-xs text-gray-500 mt-4"
-                        x-text="
-                            'Projeções matemáticas para ' +
-                            horizonte +
-                            ' anos, mantendo constantes as estimativas do período analisado.'
-                        "
-                    ></p>
-                </div>
-
-                <!-- Resumo -->
-                <div
-                    class="card p-6 bg-gradient-to-r from-blue-900/30 to-purple-900/30 border-blue-500/30 mb-6"
-                >
-                    <div class="flex items-start gap-4">
-                        <div class="text-3xl">
-                            🤖
-                        </div>
-
-                        <div>
-                            <h3 class="text-lg font-semibold text-white mb-2">
-                                Resumo da Carteira
-                            </h3>
-
-                            <p
-                                class="text-gray-300 text-sm leading-relaxed"
-                                x-text="recomendacao"
-                            ></p>
-                        </div>
-                    </div>
-                </div>
+          <div class="card p-5 min-w-0">
+            <h3 class="text-lg font-semibold text-white mb-4">Performance Comparativa</h3>
+            <div x-show="historico">
+              <div id="graficoHistorico" style="height: 380px;"></div>
+              <p class="mt-3 text-xs text-gray-400 leading-relaxed">O desempenho histórico é reconstruído com os pesos calculados para a carteira no período selecionado. Não representa um backtest fora da amostra.</p>
             </div>
-        </main>
-    </div>
+            <div x-show="!historico" class="rounded-xl border border-yellow-500/20 bg-yellow-500/10 p-4 text-sm text-yellow-200">Não foi possível gerar o desempenho histórico para o período selecionado.</div>
+          </div>
+        </div>
 
-    <!-- Scripts -->
-    <script src="/static/js/api.js"></script>
-    <script src="/static/js/charts.js"></script>
-    <script src="/static/js/app.js"></script>
-    <script>
-        window.dashboardApp = dashboardApp;
-    </script>
+        <!-- Projeções -->
+        <div class="card p-5">
+          <h3 class="text-lg font-semibold text-white mb-4">Projeções Patrimoniais</h3>
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div class="rounded-xl bg-red-500/10 border border-red-500/20 p-4">
+              <p class="text-xs text-red-300">Cenário pessimista</p>
+              <p class="mt-1 text-xl font-bold text-red-400 font-mono" x-text="'R$ ' + formatarMoeda(projecaoPessimista)"></p>
+            </div>
+            <div class="rounded-xl bg-blue-500/10 border border-blue-500/20 p-4">
+              <p class="text-xs text-blue-300">Cenário esperado</p>
+              <p class="mt-1 text-xl font-bold text-blue-400 font-mono" x-text="'R$ ' + formatarMoeda(projecaoPatrimonial)"></p>
+            </div>
+            <div class="rounded-xl bg-green-500/10 border border-green-500/20 p-4">
+              <p class="text-xs text-green-300">Cenário otimista</p>
+              <p class="mt-1 text-xl font-bold text-green-400 font-mono" x-text="'R$ ' + formatarMoeda(projecaoOtimista)"></p>
+            </div>
+          </div>
+          <p class="text-xs text-gray-500 mt-4" x-text="'Projeções matemáticas para ' + horizonte + ' anos, mantendo constantes as estimativas do período analisado.'"></p>
+        </div>
+
+        <!-- Resumo -->
+        <div class="card p-6 bg-gradient-to-r from-blue-900/30 to-purple-900/30 border-blue-500/30 mb-6">
+          <div class="flex items-start gap-4">
+            <div class="text-3xl text-blue-300"></div>
+            <div>
+              <h3 class="text-lg font-semibold text-white mb-2">Resumo da Carteira</h3>
+              <p class="text-gray-300 text-sm leading-relaxed" x-text="recomendacao"></p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- Scripts -->
+  <script src="/static/js/api.js"></script>
+  <script src="/static/js/charts.js"></script>
+  <script src="/static/js/app.js"></script>
+  <script>
+    window.dashboardApp = dashboardApp;
+  </script>
 </body>
 </html>
-

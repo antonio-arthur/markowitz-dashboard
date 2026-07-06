@@ -11,7 +11,7 @@
         periodoAnalise: '1y',
         periodoDados: 'Últimos 12 meses',
 
-        taxaLivreRisco: 0.10,
+        taxaLivreRisco: 0.1425,
         benchmark: '^BVSP',
         estrategia: '',
 
@@ -55,7 +55,6 @@
         tickersCorrelacao: [],
 
         historico: null,
-        historicoDemonstrativo: true,
 
         recomendacao: '',
 
@@ -954,7 +953,7 @@
         // HISTÓRICO
         // =====================================================
 
-        processarHistorico(resultado) {
+                processarHistorico(resultado) {
             if (
                 resultado &&
                 resultado.historico &&
@@ -975,17 +974,11 @@
                 this.historico =
                     resultado.historico;
 
-                this.historicoDemonstrativo =
-                    false;
-
                 return;
             }
 
             this.historico = null;
-            this.historicoDemonstrativo =
-                false;
-        },
-
+        },  
         // =====================================================
         // PROJEÇÕES
         // =====================================================

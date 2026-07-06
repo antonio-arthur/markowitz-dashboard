@@ -1549,10 +1549,8 @@
                     color:
                         '#f59e0b',
 
-                    width: 2,
-
-                    dash:
-                        'dash'
+                    width: 2
+ 
                 },
 
                 hovertemplate:

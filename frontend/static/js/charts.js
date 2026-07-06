@@ -178,6 +178,12 @@
             return;
         }
 
+        /*
+         * Remove mensagens antigas que podem ter ficado
+         * dentro do container antes de uma nova renderização.
+         */
+        elemento.innerHTML = '';
+
         dadosFronteira =
             dadosFronteira &&
             typeof dadosFronteira ===
@@ -1555,7 +1561,7 @@
                     width: 2,
 
                     shape:
-                        'linear'
+                        'spline'
                 },
 
                 marker: {

@@ -1537,12 +1537,15 @@
                     '<extra></extra>'
             },
 
+            // ----------------------------------------------------
+            // I B O V E S P A   —   L I N H A   C O N T Í N U A
+            // ----------------------------------------------------
             {
                 x: meses,
                 y: ibovespa,
 
                 type: 'scatter',
-                mode: 'lines',
+                mode: 'lines+markers',
                 name: 'Ibovespa',
 
                 line: {
@@ -1551,8 +1554,14 @@
 
                     width: 2,
 
-                    dash:
-                        'dash'
+                    shape:
+                        'linear'
+                },
+
+                marker: {
+                    size: 4,
+                    color:
+                        '#f59e0b'
                 },
 
                 hovertemplate:

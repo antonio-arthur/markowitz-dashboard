@@ -200,6 +200,39 @@
       border-collapse: collapse;
     }
 
+    /* Tooltip para os perfis */
+    [data-tooltip] {
+      position: relative;
+      cursor: help;
+    }
+
+    [data-tooltip]::after {
+      content: attr(data-tooltip);
+      position: absolute;
+      bottom: 120%;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #1e293b;
+      color: #f1f5f9;
+      padding: 8px 12px;
+      border-radius: 8px;
+      font-size: 0.75rem;
+      line-height: 1.4;
+      white-space: normal;
+      width: 200px;
+      text-align: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s ease;
+      z-index: 20;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+      border: 1px solid rgba(59, 130, 246, 0.3);
+    }
+
+    [data-tooltip]:hover::after {
+      opacity: 1;
+    }
+
     @media (min-width: 1024px) {
       .sidebar-desktop {
         position: sticky;
@@ -232,9 +265,27 @@
       <div class="card p-4">
         <h3 class="text-sm font-semibold text-gray-300 mb-3">Perfil do Investidor</h3>
         <div class="grid grid-cols-1 gap-2">
-          <button type="button" @click="perfil = 'conservador'" :class="{'active': perfil === 'conservador'}" class="profile-btn py-2 px-3 rounded-lg text-xs font-medium text-gray-300 hover:text-white">Conservador</button>
-          <button type="button" @click="perfil = 'moderado'" :class="{'active': perfil === 'moderado'}" class="profile-btn py-2 px-3 rounded-lg text-xs font-medium text-gray-300 hover:text-white">Moderado</button>
-          <button type="button" @click="perfil = 'arrojado'" :class="{'active': perfil === 'arrojado'}" class="profile-btn py-2 px-3 rounded-lg text-xs font-medium text-gray-300 hover:text-white">Arrojado</button>
+          <button type="button"
+                  @click="perfil = 'conservador'"
+                  :class="{'active': perfil === 'conservador'}"
+                  class="profile-btn py-2 px-3 rounded-lg text-xs font-medium text-gray-300 hover:text-white"
+                  data-tooltip="Menor risco. A carteira busca a menor oscilação histórica possível (mínima variância), sacrificando retorno para preservar capital.">
+            Conservador
+          </button>
+          <button type="button"
+                  @click="perfil = 'moderado'"
+                  :class="{'active': perfil === 'moderado'}"
+                  class="profile-btn py-2 px-3 rounded-lg text-xs font-medium text-gray-300 hover:text-white"
+                  data-tooltip="Equilíbrio entre risco e retorno. A carteira maximiza o Índice de Sharpe – o maior prêmio por unidade de risco assumida.">
+            Moderado
+          </button>
+          <button type="button"
+                  @click="perfil = 'arrojado'"
+                  :class="{'active': perfil === 'arrojado'}"
+                  class="profile-btn py-2 px-3 rounded-lg text-xs font-medium text-gray-300 hover:text-white"
+                  data-tooltip="Maior potencial de retorno. A carteira mira um retorno-alvo elevado (80% acima do perfil conservador), aceitando maior volatilidade.">
+            Arrojado
+          </button>
         </div>
       </div>
 

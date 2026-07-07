@@ -278,15 +278,10 @@
 
         descricaoPeriodo(periodo) {
             var periodos = {
-                '1mo': 'Último mês',
                 '3mo': 'Últimos 3 meses',
                 '6mo': 'Últimos 6 meses',
-                '1y': 'Últimos 12 meses',
-                '2y': 'Últimos 2 anos',
-                '5y': 'Últimos 5 anos',
-                '10y': 'Últimos 10 anos',
-                'ytd': 'Ano atual',
-                'max': 'Período máximo disponível'
+                '1y': 'Últimos 12 meses'
+                
             };
 
             return (

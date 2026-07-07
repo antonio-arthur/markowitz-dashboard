@@ -73,7 +73,6 @@ const APIService = {
 
     validarPeriodo(periodo) {
         const periodosPermitidos = [
-            '1mo',
             '3mo',
             '6mo',
             '1y'

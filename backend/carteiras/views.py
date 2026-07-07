@@ -1013,6 +1013,49 @@ def calcular_fronteira_eficiente(
 # DOWNLOAD E PROCESSAMENTO DOS ATIVOS
 # ============================================================
 
+def calcular_intervalo_periodo(periodo):
+    """
+    Converte o período selecionado na interface
+    para datas explícitas de início e fim.
+
+    Isso deixa o download pelo yfinance mais estável,
+    principalmente para períodos longos como 2y, 5y e 10y.
+    """
+    hoje = pd.Timestamp.today().normalize()
+
+    periodos = {
+        "1mo": pd.DateOffset(months=1),
+        "3mo": pd.DateOffset(months=3),
+        "6mo": pd.DateOffset(months=6),
+        "1y": pd.DateOffset(years=1),
+        "2y": pd.DateOffset(years=2),
+        "5y": pd.DateOffset(years=5),
+        "10y": pd.DateOffset(years=10),
+    }
+
+    if periodo == "ytd":
+        inicio = pd.Timestamp(
+            year=hoje.year,
+            month=1,
+            day=1,
+        )
+
+        return inicio, hoje + pd.Timedelta(days=1)
+
+    if periodo == "max":
+        return None, None
+
+    deslocamento = periodos.get(
+        periodo,
+        pd.DateOffset(years=1),
+    )
+
+    inicio = hoje - deslocamento
+    fim = hoje + pd.Timedelta(days=1)
+
+    return inicio, fim
+
+
 def processar_dados(
     tickers,
     periodo="1y"
@@ -1048,13 +1091,27 @@ def processar_dados(
     if resultado_cache is not None:
         return resultado_cache
 
-    dados = yf.download(
-        tickers=tickers,
-        period=periodo,
-        progress=False,
-        auto_adjust=False,
-        threads=True
+    data_inicial, data_final = calcular_intervalo_periodo(
+        periodo
     )
+
+    if periodo == "max":
+        dados = yf.download(
+            tickers=tickers,
+            period="max",
+            progress=False,
+            auto_adjust=False,
+            threads=False,
+        )
+    else:
+        dados = yf.download(
+            tickers=tickers,
+            start=data_inicial,
+            end=data_final,
+            progress=False,
+            auto_adjust=False,
+            threads=False,
+        )
 
     if dados is None or dados.empty:
         return (
@@ -1122,7 +1179,12 @@ def processar_dados(
             None,
             None,
             None,
-            "Dados históricos insuficientes"
+            (
+                "Dados históricos insuficientes para o período selecionado. "
+                f"Foram encontradas {len(retornos)} observações válidas, "
+                f"mas o mínimo exigido é {MIN_OBSERVACOES}. "
+                "Tente usar um período maior ou remover ativos com pouco histórico."
+            )
         )
 
     retorno_medio = calcular_retorno_anual(
